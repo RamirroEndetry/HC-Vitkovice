@@ -1,14 +1,33 @@
 const fs=require('node:fs');
 const vm=require('node:vm');
 const assert=require('node:assert/strict');
+const Competition=require('./dist/competition.js');
+const tip=(name,home,away,goals='')=>({name,home,away,goals,outcome:Competition.resultOf(home,away)});
+assert.equal(Competition.validate(tip('Petr Novák',2,1)),'');
+assert.equal(Competition.validate(tip('Eva Nová',1,1)),'');
+assert.ok(Competition.validate({...tip('Eva Nová',1,1),outcome:'1'}));
+assert.ok(Competition.validate(tip('A',2,1)));
+assert.ok(Competition.validate(tip('Jan Novák',2.5,1)));
+assert.ok(Competition.validate(tip('Jan Novák',2,1,'over')));
+assert.deepEqual(Competition.evaluate([tip('Petr Novák',2,1),tip('Eva Nová',3,1)],{home:2,away:1}).map(e=>e.name),['Petr Novák']);
+assert.deepEqual(Competition.evaluate([tip('Petr Novák',3,1),tip('Eva Nová',2,2)],{home:2,away:1}).map(e=>e.name),['Petr Novák','Eva Nová']);
+assert.deepEqual(Competition.evaluate([tip('Petr Novák',3,1),tip('Eva Nová',2,2,'under')],{home:2,away:1}).map(e=>e.name),['Eva Nová']);
+assert.equal(Competition.evaluate([],{home:2,away:1}).length,0);
+assert.equal(Competition.evaluate([tip('Eva Nová',2,1)],null).length,0);
+assert.equal(Competition.evaluate([tip('Eva Nová',2,1)],{home:-1,away:1}).length,0);
 const elements=new Map();
-function el(key){if(!elements.has(key))elements.set(key,{innerHTML:'',textContent:'',value:'',style:{},dataset:{},classList:{toggle(){}},addEventListener(type,fn){this[type]=fn},setAttribute(){},showModal(){},close(){}});return elements.get(key)}
-class TestDate extends Date {constructor(...args){super(...(args.length?args:['2026-10-19T10:00:00+02:00']))}static now(){return new Date('2026-10-19T10:00:00+02:00').getTime()}}
-const context={console,Intl,Date:TestDate,Number,String,Object,JSON,Array,setInterval(){},setTimeout(){},clearTimeout(){},location:{hash:'#prehled'},localStorage:{getItem(){return null},setItem(k,v){context.saved=JSON.parse(v)}},document:{querySelector:el,querySelectorAll(){return []},addEventListener(){}},addEventListener(){},window:{scrollTo(){}}};
-vm.createContext(context);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),context);
-for(const route of ['prehled','zapasy','tipy','zebricek','hraci']){context.location.hash='#'+route;vm.runInContext('render()',context);assert.ok(el('#main').innerHTML.length>200,route)}
-context.location.hash='#prehled';vm.runInContext('render(); outcome="1"',context);
-el('#home-score').value='3';el('#away-score').value='1';el('#goals').value='under';el('#tip-form').submit({preventDefault(){}});assert.equal(context.saved.lib.home,3);assert.equal(context.saved.lib.outcome,'1');
-vm.runInContext('outcome="X"',context);el('#home-score').value='3';el('#away-score').value='1';el('#tip-form').submit({preventDefault(){}});assert.equal(context.saved.lib.outcome,'1');assert.match(el('#toast').textContent,/odpovídat/);
-vm.runInContext('matches[0].date="2020-01-01T17:30:00+01:00"; outcome="2"',context);el('#tip-form').submit({preventDefault(){}});assert.equal(context.saved.lib.outcome,'1');assert.match(el('#toast').textContent,/uzavřené/);
-console.log('PASS: 5 routes, saving, score consistency, deadline enforcement. Browser visual QA unavailable.');
+const el=key=>{if(!elements.has(key))elements.set(key,{innerHTML:'',textContent:'',value:'',checked:false,style:{},classList:{toggle(){}},addEventListener(){},showModal(){this.open=true},close(){this.open=false}});return elements.get(key)};
+let now='2026-10-19T10:00:00+02:00';class TestDate extends Date{constructor(...args){super(...(args.length?args:[now]))}static now(){return new Date(now).getTime()}}
+const storage=new Map();let failStorage=false;
+const context={console,Competition,Date:TestDate,Intl,crypto:{randomUUID:()=>String(Math.random())},localStorage:{getItem:k=>storage.get(k)||null,setItem(k,v){if(failStorage)throw Error('full');storage.set(k,v)}},document:{querySelector:el,querySelectorAll:()=>[],addEventListener(){}},location:{hash:'',pathname:'/',search:''},history:{replaceState(){}},setTimeout(){},setInterval(){},clearTimeout(){},addEventListener(){}};
+vm.createContext(context);vm.runInContext(fs.readFileSync('dist/data.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),context);
+assert.match(el('#main').innerHTML,/Dotkni se obrazovky/);
+vm.runInContext('form(); outcome="1"',context);
+el('#guest-name').value='<b>Eva</b>';el('#home-score').value='2';el('#away-score').value='1';el('#goals').value='under';
+vm.runInContext('submitEntry()',context);assert.match(el('#main').innerHTML,/&lt;b&gt;Eva&lt;\/b&gt;/);assert.equal(JSON.parse(storage.values().next().value).entries.length,1);
+vm.runInContext('form(); outcome="1"',context);vm.runInContext('submitEntry()',context);assert.match(el('#toast').textContent,/už je/);
+now='2026-10-20T17:30:00+02:00';el('#guest-name').value='Jiný člověk';vm.runInContext('submitEntry()',context);assert.equal(JSON.parse(storage.values().next().value).entries.length,1);
+el('#result-home').value='2';el('#result-away').value='1';el('#result-confirm').checked=true;vm.runInContext('submitResult()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězi/);assert.match(el('#main').innerHTML,/Cenu si vyzvedněte ve VIP zóně/);
+vm.runInContext('currentId="kom"; form(); outcome="X"',context);el('#guest-name').value='Jan Novák';el('#home-score').value='1';el('#away-score').value='1';el('#goals').value='';failStorage=true;vm.runInContext('submitEntry()',context);assert.match(el('#toast').textContent,/Uložení se nezdařilo/);assert.equal(JSON.parse(storage.values().next().value).entries.length,1);
+for(const fn of ['welcome','form','resultScreen','staff','rules'])vm.runInContext(fn+'()',context);
+console.log('PASS: exact/nearest winners, ties, goal tie-break, draws, validation, escaped names, multiple guests, duplicates, deadline, result announcement, storage failure and screen rendering. Visual browser QA not performed.');
