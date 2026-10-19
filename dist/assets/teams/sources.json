@@ -1,0 +1,117 @@
+{
+  "retrievedAt": "2026-10-19T10:11:29.134Z",
+  "teams": [
+    {
+      "id": "vit",
+      "name": "HC Vítkovice Ridera",
+      "file": "assets/teams/vit.png",
+      "source": "https://hc-vitkovice.esports.cz/files/logos/logo_VIT_invert.png",
+      "bytes": 55332,
+      "sha256": "39ea2990ba730f0a83b6fca6833648435811353795f837ae7aa1da9b537dac06"
+    },
+    {
+      "id": "lib",
+      "name": "Bílí Tygři Liberec",
+      "file": "assets/teams/lib.png",
+      "source": "https://hc-vitkovice.esports.cz/files/logos/logo_LIB.png",
+      "bytes": 90486,
+      "sha256": "0de16c32e2f30e335ac23a5200efd6bccf1d6c7bed6c785b31603e5de8354c70"
+    },
+    {
+      "id": "kom",
+      "name": "HC Kometa Brno",
+      "file": "assets/teams/kom.png",
+      "source": "https://www.hc-vitkovice.cz/dist/znaky/kom.png",
+      "bytes": 76113,
+      "sha256": "71ad0c9cf1ac8d60ab5d28642ca0587faa9d1a3915272043acfdf9b92f70ea73"
+    },
+    {
+      "id": "tri",
+      "name": "HC Oceláři Třinec",
+      "file": "assets/teams/tri.png",
+      "source": "https://www.hc-vitkovice.cz/dist/znaky/tri.png",
+      "bytes": 94839,
+      "sha256": "42ec957c3470b3a879ce5d157abfa197d313f2ed09c15776c69c46685eb89065"
+    },
+    {
+      "id": "pce",
+      "name": "HC Dynamo Pardubice",
+      "file": "assets/teams/pce.png",
+      "source": "https://hc-vitkovice.esports.cz/files/logos/logo_PCE.png",
+      "bytes": 44351,
+      "sha256": "f9bb84342bea813008c83dd2b5b568291d5a23b80c8c73cdf4daecd8e629c362"
+    },
+    {
+      "id": "kva",
+      "name": "Energie Karlovy Vary",
+      "file": "assets/teams/kva.png",
+      "source": "https://hc-vitkovice.esports.cz/files/logos/logo_KVA.png",
+      "bytes": 35093,
+      "sha256": "2f232098cb16d79d17344c4cccfe7c2720aa010ad1f409cfd58188654071d1b1"
+    },
+    {
+      "id": "mhk",
+      "name": "Mountfield HK",
+      "file": "assets/teams/mhk.png",
+      "source": "https://hc-vitkovice.esports.cz/files/logos/mhk.png",
+      "bytes": 108843,
+      "sha256": "deb4bbc2e9369c39f668bf1e604df7edda647eab244d5cab9f62850ff7974409"
+    },
+    {
+      "id": "ceb",
+      "name": "Motor České Budějovice",
+      "file": "assets/teams/ceb.png",
+      "source": "https://www.hc-vitkovice.cz/dist/znaky/ceb.png",
+      "bytes": 43556,
+      "sha256": "8cb63dfb34d928e3bdd613fe1f72f34d55bd6d25780aac8dd4c8de8621769668"
+    },
+    {
+      "id": "plz",
+      "name": "HC Škoda Plzeň",
+      "file": "assets/teams/plz.svg",
+      "source": "https://www.hc-vitkovice.cz/dist/znaky/plz.svg",
+      "bytes": 42836,
+      "sha256": "c7c9f8bba1f1cc97c8adbb6dc635876a64616a8ec4b423ea5dcfe1ee9b9bd5e7"
+    },
+    {
+      "id": "kla",
+      "name": "Rytíři Kladno",
+      "file": "assets/teams/kla.png",
+      "source": "https://www.hc-vitkovice.cz/dist/znaky/kla.png",
+      "bytes": 44753,
+      "sha256": "6fd8dc95a51749dcf506e071cdb85b97e5d084681e9e1d41231cc472d2ef8b11"
+    },
+    {
+      "id": "spa",
+      "name": "HC Sparta Praha",
+      "file": "assets/teams/spa.png",
+      "source": "https://hc-vitkovice.esports.cz/files/logos/logo_SPA.png",
+      "bytes": 99625,
+      "sha256": "acb45b0020e3661d4bce07a178e9329f6b1eb38e4e9d593a95fd20b81f62d355"
+    },
+    {
+      "id": "lit",
+      "name": "HC Verva Litvínov",
+      "file": "assets/teams/lit.png",
+      "source": "https://www.hc-vitkovice.cz/dist/znaky/lit.png",
+      "bytes": 51740,
+      "sha256": "bb2c7479762613962f05f4ee3ecd12ce15a1d6f426a02916317ab4611143a219"
+    },
+    {
+      "id": "mbl",
+      "name": "BK Mladá Boleslav",
+      "file": "assets/teams/mbl.png",
+      "source": "https://www.hc-vitkovice.cz/dist/znaky/mbl.png",
+      "bytes": 35364,
+      "sha256": "67820b47561e673750b9916ce26425ace88733c1b4793f75f56192f5fb0cb570"
+    },
+    {
+      "id": "olo",
+      "name": "HC Olomouc",
+      "file": "assets/teams/olo.png",
+      "source": "https://www.hc-vitkovice.cz/dist/znaky/olo.png",
+      "bytes": 112277,
+      "sha256": "2a248a4149772de2ff20336adb2aad291aab19c3039bbcd3a644c1b4eebaa68f"
+    }
+  ]
+}

@@ -4,7 +4,11 @@
   "private": true,
   "description": "Prototyp VIP tipovací soutěže HC Vítkovice",
   "scripts": {
-    "check": "node --check dist/app.js && node verify.cjs",
+    "check": "node --check dist/app.js && node --check worker.mjs && node verify.cjs && node verify-live.mjs",
+    "content:sync": "python scripts/sync-club-content.py",
+    "logos:sync": "node scripts/sync-team-logos.cjs",
+    "intro:render": "python scripts/render-intro.py",
+    "build": "npm run logos:sync",
     "dev": "npx wrangler dev",
     "deploy": "npx wrangler deploy"
   }
