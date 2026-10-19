@@ -39,7 +39,7 @@ Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotog
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` při každém pushi do `main` publikuje složku `dist` na https://ramirroendetry.github.io/HC-Vitkovice/. Jde o statický web: živé skóre (`/api/live`) běží jen přes Cloudflare worker, na Pages kiosek funguje bez něj. V nastavení repozitáře musí být Settings → Pages → Source: GitHub Actions.
+Workflow `.github/workflows/pages.yml` při každém pushi do `main` publikuje složku `dist` na https://ramirroendetry.github.io/HC-Vitkovice/. Jde o statický web: živé skóre (`/api/live`) běží jen přes Cloudflare worker, na Pages kiosek funguje bez něj. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
 
 ## Cloudflare
 
