@@ -1,0 +1,11 @@
+{
+  "name": "hc-vitkovice-vip",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Prototyp VIP tipovací soutěže HC Vítkovice",
+  "scripts": {
+    "check": "node --check dist/app.js && node verify.cjs",
+    "dev": "npx wrangler dev",
+    "deploy": "npx wrangler deploy"
+  }
+}
