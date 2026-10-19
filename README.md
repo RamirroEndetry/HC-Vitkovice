@@ -37,6 +37,10 @@ Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotog
 - `npm run check` – testy vyhodnocování a toku kiosku s pevným časem.
 - `npm run dev` – místní Cloudflare náhled přes Wrangler.
 
+## GitHub Pages
+
+Workflow `.github/workflows/pages.yml` při každém pushi do `main` publikuje složku `dist` na https://ramirroendetry.github.io/HC-Vitkovice/. Jde o statický web: živé skóre (`/api/live`) běží jen přes Cloudflare worker, na Pages kiosek funguje bez něj. V nastavení repozitáře musí být Settings → Pages → Source: GitHub Actions.
+
 ## Cloudflare
 
 `wrangler.jsonc` připravuje Worker s obsluhou `/api/live` a statickými soubory. Samotný statický HTTP server obslouží UI a demo, ale živé API běží až přes Wrangler nebo nasazený Worker. V Cloudflare připojte GitHub repozitář přes Workers Builds, se sestavovacím příkazem `npm run build` a příkazem nasazení `npx wrangler deploy`. Alternativně po `npx wrangler login` spusťte `npm run deploy`. Samotná konfigurace neprovádí nasazení ani nezajišťuje VIP přístup.
