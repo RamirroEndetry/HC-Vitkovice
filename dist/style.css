@@ -55,3 +55,142 @@
 @media(max-width:1000px){.partners-strip{grid-template-columns:200px minmax(0,1fr);gap:20px;padding:18px 22px 20px}.general-partner{padding-right:20px}.partner-slide{gap:10px}}
 @media(max-width:700px){.kiosk main{padding-bottom:200px}.kiosk footer{padding-bottom:186px}.kiosk .admin-access{bottom:182px}.partners-strip{height:170px;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:14px 12px}.general-partner{padding-right:12px}.general-partner .partner-label,.partner-rotator-head small{display:none}.partner-label{font-size:9px;letter-spacing:1.5px}.general-partner .partner-tile{padding:8px}.partner-tile{padding:6px 8px;border-radius:10px}.partner-slide{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kiosk .partner-controls button{width:32px;height:32px;min-height:32px}}
 @media(prefers-reduced-motion:reduce){.partner-slide .partner-tile,.partner-progress span{animation:none}}
+/* Vertical kiosk panel (1080x1920): full-height layout in the style of the intro video. */
+@keyframes portrait-rays{to{transform:translateX(-50%) rotate(360deg)}}
+@keyframes portrait-beams{0%,100%{opacity:.75;transform:rotate(-2deg)}50%{opacity:1;transform:rotate(2deg)}}
+@keyframes portrait-cta{0%,100%{box-shadow:0 0 0 0 #7fbcff55,0 18px 50px #0007}50%{box-shadow:0 0 0 14px #7fbcff00,0 18px 50px #0007}}
+@media (orientation:portrait) and (min-width:900px) and (min-height:1400px){
+  html,body.kiosk{overflow-x:hidden}
+  body.kiosk{min-height:100dvh;background:radial-gradient(ellipse 90% 45% at 50% 30%,#123d6b,transparent 70%),linear-gradient(180deg,#06162b,#071b34 45%,#04101f)}
+  body.kiosk::before{content:'';position:fixed;inset:-10% -20% 30%;pointer-events:none;z-index:0;transform-origin:50% 0;animation:portrait-beams 14s ease-in-out infinite;background:conic-gradient(from 168deg at 18% 0,transparent 0 6deg,#5ba5fa1c 9deg 13deg,transparent 17deg),conic-gradient(from 178deg at 82% 0,transparent 0 6deg,#5ba5fa1c 9deg 13deg,transparent 17deg),conic-gradient(from 173deg at 50% 0,transparent 0 9deg,#5ba5fa12 11deg 14deg,transparent 16deg);-webkit-mask:linear-gradient(#000 20%,transparent 85%);mask:linear-gradient(#000 20%,transparent 85%)}
+  body.kiosk::after{content:'';position:fixed;inset:auto 0 0;height:42%;pointer-events:none;z-index:0;opacity:.5;background:repeating-linear-gradient(90deg,transparent 0 118px,#5ba5fa14 119px 120px),linear-gradient(transparent,#5ba5fa0d);-webkit-mask:linear-gradient(transparent,#000 60%);mask:linear-gradient(transparent,#000 60%);transform:perspective(600px) rotateX(55deg);transform-origin:50% 100%}
+  .kiosk-brand,.kiosk main{position:relative;z-index:1}
+  .kiosk footer{display:none}
+  /* header */
+  .kiosk-brand{height:118px;padding:0 44px;background:#06162bcc;backdrop-filter:blur(10px);font-size:13px;letter-spacing:2px}
+  .kiosk-brand img{width:62px;height:72px;filter:drop-shadow(0 0 14px #5ba5fa66)}
+  .kiosk-brand strong{font:800 30px/1 'Barlow Condensed',sans-serif;letter-spacing:2px}
+  .kiosk-brand strong span{font:600 13px 'DM Sans',sans-serif;letter-spacing:6px;margin-top:6px}
+  .kiosk-brand>span{color:#8fa9c8;font-size:12px}
+  .kiosk-brand .text-button{font-size:18px;color:#cfe3ff;border:1px solid #ffffff2e;border-radius:999px;padding:12px 24px}
+  .kiosk main{max-width:none;padding:0 50px 270px;min-height:calc(100dvh - 118px)}
+  /* welcome / attract */
+  .attract,.attract:has(.featured-match){min-height:calc(100dvh - 118px - 270px);padding:30px 0 22px;justify-content:space-between;gap:14px;background:none;overflow:hidden}
+  .attract>*{position:relative;z-index:1}
+  .attract::before{content:'';position:absolute;z-index:0;top:-480px;left:50%;width:1500px;height:1500px;transform:translateX(-50%);background:repeating-conic-gradient(from 0deg,#6fb2ff2e 0 3.5deg,transparent 3.5deg 20deg);-webkit-mask:radial-gradient(circle,#000 0,#0008 22%,transparent 52%);mask:radial-gradient(circle,#000 0,#0008 22%,transparent 52%);animation:portrait-rays 90s linear infinite;pointer-events:none}
+  .attract>.attract-logo,.attract:has(.featured-match)>.attract-logo{width:170px;height:170px;margin:0;filter:drop-shadow(0 0 34px #5ba5fa99) drop-shadow(0 0 80px #155cba88)}
+  .attract .eyebrow{font-size:19px;letter-spacing:7px;color:#8fc1ff}
+  .attract h1,.attract:has(.featured-match)>h1{font:800 136px/.9 'Barlow Condensed',sans-serif;letter-spacing:2px;margin:0;text-shadow:0 0 50px #155cbacc,0 6px 30px #0009}
+  .attract>p{font-size:28px;line-height:1.4;margin:0;color:#b9d1ee;letter-spacing:.5px}
+  /* match card */
+  .attract .featured-match{max-width:none;width:100%;min-height:0;margin:6px 0;padding:28px 44px;border-radius:22px;border:1px solid #7fbcff33;background-color:#0a2445e6;box-shadow:0 0 0 1px #ffffff0a,0 30px 80px #000a,inset 0 1px 0 #ffffff1a}
+  .attract .featured-match:after{font-size:190px;bottom:-40px}
+  .attract .featured-match .hero-top{font-size:15px;letter-spacing:2.5px}
+  .attract .featured-match .matchup{padding:18px 0 14px}
+  .attract .featured-match .team-badge{width:150px;height:150px}
+  .attract .featured-match .team .team-badge img{width:142px;height:142px;filter:drop-shadow(0 0 20px #5ba5fa55)}
+  .attract .featured-match .team-logo-fallback{font-size:80px}
+  .attract .featured-match .team strong{font:800 46px 'Barlow Condensed',sans-serif;margin-top:14px;letter-spacing:1px}
+  .attract .featured-match .team small{font-size:15px;letter-spacing:3px}
+  .attract .featured-match .versus{font:800 54px 'Barlow Condensed',sans-serif;color:#5ba5fa}
+  .attract .featured-match .match-info{font-size:19px;color:#a8bfdb}
+  .attract .featured-match .countdown{margin-top:20px;padding-top:18px;font-size:19px}
+  .attract .featured-match .countdown b{font:700 46px 'Barlow Condensed',sans-serif;letter-spacing:3px}
+  /* call to action like the video's pill */
+  .attract .touch-start,.attract:has(.featured-match)>.touch-start{width:100%;min-height:124px;margin:4px 0;padding:20px 50px;gap:32px;border-radius:999px;font-size:44px;justify-content:space-between;animation:portrait-cta 2.6s ease-in-out infinite}
+  .attract .touch-start span{flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+  .attract .touch-start small{font:500 21px 'DM Sans',sans-serif;text-transform:none;letter-spacing:0;margin-top:6px}
+  .attract>.text-button{font-size:24px;color:#cfe3ff;padding:14px 20px}
+  .attract .club-navigation{gap:20px;margin:0}
+  .attract .club-navigation button{font-size:24px;padding:22px 40px;border-radius:999px;min-width:300px}
+  .attract-bottom{padding:10px 70px 0;font-size:15px;letter-spacing:6px}
+  /* inner screens */
+  .kiosk-head{padding:22px 0 18px}
+  .kiosk-head .text-button{font-size:22px;color:#cfe3ff}
+  .kiosk-head .eyebrow{font-size:16px;letter-spacing:4px}
+  .kiosk-card{max-width:none;padding:42px 52px;border-radius:22px;box-shadow:0 30px 80px #0009}
+  .kiosk-card h1{font-size:62px;line-height:1.05}
+  .kiosk-card h1 .versus{font-size:30px}
+  .kiosk-card h2{font-size:38px}
+  .kiosk-card .eyebrow{font-size:15px;letter-spacing:3px}
+  .kiosk-card .hint,.results-screen p{font-size:19px}
+  .kiosk-card .notice{font-size:18px;padding:16px 24px;margin:16px 0}
+  .kiosk-card .featured-match{max-width:none;padding:22px 32px;margin:20px 0}
+  .kiosk-card .featured-match .matchup{padding:12px 0 8px}
+  .kiosk-card .featured-match .match-info{display:none}
+  .kiosk-card .featured-match .countdown{margin-top:10px;padding-top:14px}
+  .kiosk-card .featured-match .hero-top{font-size:13px}
+  .kiosk-card .featured-match .team-badge{width:96px;height:96px}
+  .kiosk-card .featured-match .team .team-badge img{width:90px;height:90px}
+  .kiosk-card .featured-match .team strong{font-size:30px;margin-top:6px}
+  .kiosk-card .featured-match .team small{font-size:13px}
+  .kiosk-card .featured-match .versus{font-size:36px}
+  .kiosk-card .featured-match .match-info,.kiosk-card .featured-match .countdown{font-size:16px}
+  .kiosk-card .featured-match .countdown b{font-size:30px}
+  .kiosk-card .field-label{font-size:25px;margin:26px 0 12px}
+  .kiosk-card .field-label small{font-size:18px}
+  .kiosk-card input,.kiosk-card select{min-height:78px;font-size:28px;border-radius:12px;padding:16px 22px}
+  .kiosk-card .choices{gap:16px}
+  .kiosk-card .choice{min-height:116px;font-size:21px;border-radius:14px}
+  .kiosk-card .choice b{font-size:46px;margin-bottom:8px}
+  .kiosk-card .form-row{gap:36px}
+  .kiosk-card .score{gap:16px}
+  .kiosk-card .score input{width:130px;min-height:92px;font-size:46px}
+  .kiosk-card .score>span{font-size:40px}
+  .kiosk-card .score small{font-size:16px}
+  .kiosk-card .submit-row{margin-top:22px;padding-top:22px}
+  .kiosk-card .primary{min-height:88px;font-size:25px;padding:0 48px;border-radius:999px}
+  .kiosk-card .text-button{font-size:20px}
+  .final-score{font-size:130px}
+  .live-score-panel{padding:34px 24px}
+  .live-score-panel .eyebrow{font-size:15px}
+  .kiosk-card .live-score{font-size:150px}
+  .live-score-panel p{font-size:20px}
+  .live-score-panel small,.content-source{font-size:15px}
+  .kiosk-card table{font-size:19px}
+  .rank-row{font-size:19px}
+  .winner-names{font-size:48px}
+  .results-screen .prize{font-size:26px;padding:26px}
+  .confirmation h1{font-size:110px}
+  .confirmation>p,.confirmation .attract-match{font-size:26px}
+  .confirmation-icon{width:140px;height:140px;font-size:72px}
+  /* club pages */
+  .club-page-heading{max-width:none}
+  .club-page-heading .eyebrow{font-size:16px;letter-spacing:4px}
+  .club-page-heading h1{font-size:84px;color:#fff;text-shadow:0 0 40px #155cba99}
+  .player-filters,.roster-grid{max-width:none}
+  .player-filters{gap:14px}
+  .player-filters button{font-size:22px;padding:18px 32px;border-radius:999px}
+  .roster-grid{grid-template-columns:repeat(3,1fr);gap:24px}
+  .roster-photo{height:300px}
+  .roster-number{font-size:140px}
+  .roster-label small{font-size:13px}
+  .roster-label h2{font-size:32px}
+  .roster-label>span{font-size:15px}
+  .content-date{font-size:16px}
+  .player-identity{grid-template-columns:360px 1fr;gap:44px}
+  .player-portrait{height:480px}
+  .player-identity h1{font-size:76px}
+  .player-identity dl{font-size:21px;row-gap:14px}
+  .player-stats strong{font-size:52px}
+  .player-stats span{font-size:15px}
+  .player-career h3{font-size:19px}
+  .player-career p{font-size:18px;line-height:1.6}
+  .club-achievements .club-lead{font-size:24px}
+  .champion-cards h2{font-size:52px}
+  .champion-cards p,.champion-cards span{font-size:18px}
+  .silver-seasons span{font-size:24px}
+  /* dialog, partners, admin */
+  .kiosk dialog{max-width:900px;padding:56px}
+  .kiosk dialog h1{font-size:56px}
+  .kiosk dialog p,.kiosk dialog li{font-size:21px}
+  .kiosk dialog .close{font-size:44px;right:24px;top:18px}
+  .partners-strip{height:252px;padding:24px 44px 26px;grid-template-columns:290px minmax(0,1fr);gap:34px}
+  .partner-label{font-size:14px;letter-spacing:3px;margin-bottom:14px}
+  .partner-rotator-head small{font-size:13px}
+  .partner-slide{gap:18px}
+  .kiosk .partner-controls button{width:48px;height:48px;min-height:48px;font-size:16px}
+  .kiosk .admin-access{bottom:270px;right:3px}
+  #toast{font-size:22px;padding:22px 34px}
+  .screensaver-hint{font-size:20px;padding:16px 28px;bottom:40px;right:40px}
+}

@@ -78,6 +78,10 @@ Normalizovaná JSON odpověď adaptéru:
 Kontroly: `npm run check` ověřuje ranking, celou demoverzi, oddělení dat, chybějící/opožděný feed a serverové rozhraní pomocí simulovaných odpovědí. Skutečné napojení na poskytovatele ani vizuální kontrola v prohlížeči nebyly provedeny.
 
 
+## Panel na výšku
+
+Na displeji na výšku (od 900 px šířky a 1400 px výšky, typicky 1080×1920) se zapne samostatné rozvržení ve stylu intro videa. Úvod se vejde na celou obrazovku bez posouvání, dotykové prvky jsou velké a za logem jsou reflektory a paprsky. Pravidla jsou v bloku `@media (orientation:portrait)` na konci `dist/style.css`. Rozvržení na šířku a pro mobily zůstává beze změny.
+
 ## Spořič obrazovky s intro videem
 
 Když úvodní obrazovka kiosku 45 sekund nikdo nepoužije (a hned po spuštění), přes celou obrazovku se ve smyčce přehrává 24s intro. Na panelu na výšku se použije `dist/assets/intro/intro-portrait.mp4` (1080×1920), na šířku `intro.mp4` (1920×1080). Dotyk nebo klávesa spořič zavře a vrátí úvod; dotyk nestiskne nic pod ním. Logika je v `dist/screensaver.js`.
