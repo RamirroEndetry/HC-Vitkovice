@@ -88,6 +88,14 @@ Když úvodní obrazovka kiosku 45 sekund nikdo nepoužije (a hned po spuštěn�
 
 Videa skládá `npm run intro:render` (na šířku) a `npm run intro:render -- --portrait` (na výšku) (Python, Pillow, numpy, ffmpeg) z loga a fotek hráčů stažených z webu klubu. Hráče a texty lze změnit v hlavičce `scripts/render-intro.py`.
 
+## Historie klubu
+
+Obrazovka „Úspěchy klubu“ ukazuje časovou osu 41 mezníků z oficiální historie klubu (1928–2022) se 17 dobovými fotografiemi, filtr podle období, přehled titulů a stříbrných sezón. Data stahuje `python scripts/sync-club-content.py --history-only` (texty z hc-vitkovice.cz/historie-klubu; fotografie tam mají mrtvé odkazy, skript je proto bere ze snímků Wayback Machine a ukládá do `dist/assets/history`).
+
+## Mobil a malé displeje
+
+Na telefonech se spořič nespouští (není to kiosek a mobilní prohlížeče často blokují autoplay) a lišta partnerů není připnutá – je to poslední blok stránky.
+
 ## Loga partnerů
 
 `python scripts/trim-partner-logos.py` ořeže bílé okraje stažených log partnerů, aby vyplnila dlaždice v liště; `scripts/sync-club-content.py` to dělá automaticky po každém stažení.

@@ -2,6 +2,9 @@
 // Portrait panels get the 1080x1920 cut, landscape screens the 1920x1080 one.
 (function(){
   const IDLE_MS=45000;
+  // Phones and small tablets are not kiosks: no screensaver there (and mobile browsers often block autoplay anyway).
+  const kioskScreen=matchMedia('(min-width: 900px) and (min-height: 700px)');
+  if(!kioskScreen.matches)return;
   const saver=document.createElement('div');
   saver.id='screensaver';saver.hidden=true;saver.setAttribute('role','button');saver.setAttribute('aria-label','Spořič obrazovky – dotkni se pro pokračování');
   saver.innerHTML='<video muted loop playsinline preload="auto"></video><span class="screensaver-hint">☝ Dotkni se obrazovky</span>';
@@ -19,7 +22,8 @@
     if(!saver.hidden)video.play().catch(()=>{});
   }
   const onWelcome=()=>!!document.querySelector('#main .attract:not(.confirmation)')&&!document.querySelector('dialog[open]');
-  function show(){if(!saver.hidden)return;pickSource();saver.hidden=false;video.currentTime=0;video.play().catch(()=>{})}
+  // If the browser refuses autoplay, do not leave a frozen poster on screen; just stay on the welcome screen.
+  function show(){if(!saver.hidden)return;pickSource();saver.hidden=false;video.currentTime=0;video.play().catch(()=>{hide();idleSince=Date.now()+600000})}
   function hide(){if(saver.hidden)return;saver.hidden=true;video.pause();idleSince=Date.now()}
   // Swallow the waking tap so it does not press a button underneath.
   saver.addEventListener('click',event=>{event.stopPropagation();hide()});

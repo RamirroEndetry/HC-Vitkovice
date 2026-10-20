@@ -208,3 +208,80 @@
   .attract .featured-match{backdrop-filter:blur(6px)}
 }
 @media(prefers-reduced-motion:reduce){#main>*,.touch-start::after,.attract::before,body.kiosk::before{animation:none}}
+/* Phones: the partner bar is the last thing on the page, not a fixed panel covering half the screen. */
+@media(max-width:700px){
+  .kiosk main{padding-bottom:24px;min-height:0}.kiosk footer{padding-bottom:20px}.kiosk .admin-access{bottom:12px}
+  .partners-strip{position:static;height:auto;grid-template-columns:1fr;gap:16px;padding:22px 16px 18px;margin-top:20px;box-shadow:none;backdrop-filter:none}
+  .general-partner{padding:0 0 16px;border-right:0;border-bottom:1px solid #ffffff1a;flex-direction:row;align-items:center;gap:14px}
+  .general-partner .partner-label,.partner-rotator-head small{display:flex}
+  .general-partner .partner-label{margin:0;flex:1}
+  .general-partner .partner-tile{flex:0 0 150px;aspect-ratio:3/2;padding:6px 8px}
+  .partner-frame{height:88px;flex:none}
+  .partner-slide .partner-tile{flex-basis:calc(25% - 6px)}
+  .partner-progress{margin-top:10px}
+  .attract{min-height:0}
+}
+/* Club history: photo hero, stat strip, champion cards with photos and a timeline. */
+.history-hero{position:relative;max-width:1000px;margin:0 auto 22px;border-radius:14px;overflow:hidden;min-height:340px;background:#0b2446;color:#fff;box-shadow:0 24px 70px #0009}
+.history-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:.55;filter:saturate(.75)}
+.history-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,#071b3410 0%,#071b34c8 55%,#071b34f2 100%)}
+.history-hero-text{position:relative;z-index:1;padding:200px 40px 34px;max-width:720px}
+.history-hero-text .eyebrow{color:#8fc1ff;letter-spacing:4px}
+.history-hero-text h2{font:800 46px/1.05 'Barlow Condensed',sans-serif;margin:12px 0 14px;text-transform:uppercase}
+.history-hero-text p{font-size:15px;line-height:1.7;color:#c4d6ec;margin:0}
+.history-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:1000px;margin:0 auto 22px}
+.history-stats div{background:#ffffff0d;border:1px solid #ffffff1a;border-radius:10px;padding:18px 14px;text-align:center;color:#fff}
+.history-stats strong{display:block;font:800 40px/1 'Barlow Condensed',sans-serif}
+.history-stats span{display:block;margin-top:8px;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8fa9c8}
+.history-stats .gold{background:linear-gradient(160deg,#2a2410,#4a3b12);border-color:#d7b25c66}
+.history-stats .gold strong{color:#f1cf7a}
+.history-champions{max-width:1000px;margin:0 auto 24px}
+.history-champions article{display:grid;grid-template-rows:200px auto;padding:0;overflow:hidden;border-top:0;border:1px solid #d7b25c55}
+.history-champions article img{width:100%;height:100%;object-fit:cover;object-position:center 25%}
+.history-champions article div{padding:22px 26px 26px;border-top:3px solid #ddc389}
+.history-card{max-width:1000px}
+.history-head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:10px}
+.history-head h2{margin:6px 0 0}
+.history-filters{margin:0;justify-content:flex-end}
+.history-filters button{color:#2f4d73;border-color:#c9d6e6;background:#f4f7fb}
+.history-filters .selected{background:#155cba;color:#fff;border-color:#155cba}
+.history-timeline{position:relative;margin:26px 0 36px;padding-left:6px}
+.history-timeline::before{content:'';position:absolute;left:52px;top:10px;bottom:10px;width:2px;background:linear-gradient(#155cba,#c9d6e6)}
+.history-item{position:relative;display:grid;grid-template-columns:96px minmax(0,1fr);gap:0 22px;padding:14px 0 22px;animation:screen-in .5s both;animation-delay:calc(var(--i) * 40ms)}
+.history-marker{position:relative;z-index:1}
+.history-marker span{display:inline-grid;place-items:center;min-width:92px;height:36px;padding:0 10px;border-radius:999px;background:#fff;border:2px solid #155cba;color:#155cba;font:700 17px 'Barlow Condensed',sans-serif;letter-spacing:1px}
+.history-item.gold .history-marker span{background:linear-gradient(135deg,#f3d98b,#c8a24a);border-color:#b8923a;color:#3a2b06;box-shadow:0 0 0 6px #f1cf7a33}
+.history-item.silver .history-marker span{background:#eef2f7;border-color:#9aa9bc;color:#4a5c75}
+.history-item.down .history-marker span{border-color:#9aa9bc;color:#7a8ba3}
+.history-body h3{font:700 22px 'Barlow Condensed',sans-serif;margin:6px 0 6px;color:#0b2a50}
+.history-item.gold .history-body h3{color:#8a6a16}
+.history-body p{font-size:14px;line-height:1.75;color:#3f5570;margin:0;max-width:760px}
+.history-photo{margin:16px 0 0;border-radius:10px;overflow:hidden;background:#0b2446;max-width:760px;box-shadow:0 14px 40px #0b244633}
+.history-photo img{display:block;width:100%;height:auto;max-height:520px;object-fit:cover}
+.history-photo figcaption{padding:10px 14px;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8fa9c8;background:#0b2446}
+@media(max-width:1000px){.history-stats{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.history-hero{min-height:280px;border-radius:10px}.history-hero-text{padding:150px 20px 24px}.history-hero-text h2{font-size:32px}.history-stats{grid-template-columns:repeat(2,1fr);gap:8px}.history-stats strong{font-size:30px}.history-champions article{grid-template-rows:150px auto}.history-timeline::before{left:30px}.history-item{grid-template-columns:60px minmax(0,1fr);gap:0 12px}.history-marker span{min-width:56px;height:30px;font-size:14px;padding:0 6px}.history-head{align-items:flex-start}.history-filters{justify-content:flex-start}}
+@media (orientation:portrait) and (min-width:900px) and (min-height:1400px){
+  .history-hero{max-width:none;min-height:560px;border-radius:22px}
+  .history-hero-text{padding:330px 50px 44px;max-width:860px}
+  .history-hero-text .eyebrow{font-size:16px}
+  .history-hero-text h2{font-size:72px}
+  .history-hero-text p{font-size:22px}
+  .history-stats{max-width:none;gap:16px}
+  .history-stats div{padding:26px 16px}
+  .history-stats strong{font-size:58px}
+  .history-stats span{font-size:14px}
+  .history-champions{max-width:none}
+  .history-champions article{grid-template-rows:280px auto}
+  .history-card{max-width:none}
+  .history-head h2{font-size:48px}
+  .history-filters button{font-size:20px;padding:16px 26px}
+  .history-timeline::before{left:70px}
+  .history-item{grid-template-columns:130px minmax(0,1fr);gap:0 28px;padding:18px 0 30px}
+  .history-marker span{min-width:128px;height:48px;font-size:24px}
+  .history-body h3{font-size:34px}
+  .history-body p{font-size:21px;max-width:none}
+  .history-photo{max-width:none}
+  .history-photo img{max-height:640px}
+  .history-photo figcaption{font-size:14px;padding:14px 18px}
+}

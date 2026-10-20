@@ -1,4 +1,9 @@
-"""Refresh public roster/profile facts and partner images from the official club site."""
+"""Refresh public roster/profile facts, partner images and club history from the official club site.
+
+Usage: python scripts/sync-club-content.py [--history-only]
+"""
+import io
+import sys
 import concurrent.futures
 import importlib.util
 import datetime
@@ -12,7 +17,7 @@ import urllib.request
 
 ROOT = Path(__file__).resolve().parent.parent
 BASE = 'https://www.hc-vitkovice.cz'
-ALLOWED = {'www.hc-vitkovice.cz', 'hc-vitkovice.esports.cz'}
+ALLOWED = {'www.hc-vitkovice.cz', 'hc-vitkovice.cz', 'hc-vitkovice.esports.cz'}
 
 class Node:
     def __init__(self, tag='', attrs=()):
@@ -116,6 +121,79 @@ def profile(url):
         result['photo'] = asset(photo.attrs['src'],'players',pid)
     return result
 
+def read_photo(url):
+    """The club's old WordPress photos are no longer hosted; fall back to the Wayback Machine snapshot."""
+    try:
+        data, kind = read(url)
+        if kind.startswith('image/'):
+            return data, kind
+    except Exception:
+        pass
+    api = 'https://archive.org/wayback/available?url=' + urllib.parse.quote(url, safe='')
+    with urllib.request.urlopen(urllib.request.Request(api, headers={'User-Agent': 'VitkoviceVIP-ContentSync/1.0'}), timeout=30) as response:
+        snapshot = json.load(response).get('archived_snapshots', {}).get('closest')
+    if not snapshot or snapshot.get('status') != '200':
+        raise ValueError('No archived copy')
+    archived = re.sub(r'/web/(\d+)/', r'/web/\1id_/', snapshot['url']).replace('http://', 'https://', 1)
+    with urllib.request.urlopen(urllib.request.Request(archived, headers={'User-Agent': 'VitkoviceVIP-ContentSync/1.0'}), timeout=60) as response:
+        return response.read(12*1024*1024), response.headers.get_content_type()
+
+def history():
+    """Milestones from /historie-klubu: `<p><strong>date –</strong> text</p>` with photos in the following paragraphs."""
+    from PIL import Image
+    article = page(BASE+'/historie-klubu')
+    body = next((d for d in article.all('div') if 'typo' in d.attrs.get('class','')), None)
+    if not body:
+        raise ValueError('History body missing')
+    milestones = []
+    for p in body.children:
+        if not isinstance(p, Node) or p.tag != 'p':
+            continue
+        image = p.first('img')
+        if image and milestones:
+            milestones[-1].setdefault('sourcePhotos', []).append(urllib.parse.urljoin(BASE, image.attrs['src']))
+            continue
+        strong = p.first('strong')
+        text = p.text()
+        if not strong or not text:
+            continue
+        label = strong.text().strip(' –-')
+        detail = text[len(strong.text()):].strip(' –-')
+        if not label or not detail:
+            continue
+        year = re.search(r'(1[89]\d\d|20\d\d)', label)
+        milestones.append({'label': label, 'year': int(year.group(1)) if year else None, 'text': detail})
+    if len(milestones) < 20:
+        raise ValueError('History unexpectedly short; previous snapshot preserved')
+    folder = ROOT/'dist'/'assets'/'history'
+    folder.mkdir(parents=True, exist_ok=True)
+    counter = 0
+    for m in milestones:
+        photos = []
+        for source in m.pop('sourcePhotos', []):
+            try:
+                data, kind = read_photo(source)
+                im = Image.open(io.BytesIO(data)).convert('RGB')
+                im.thumbnail((1400, 1400))
+                counter += 1
+                name = f'{counter:02d}-{m["year"] or "x"}.jpg'
+                im.save(folder/name, 'JPEG', quality=82, optimize=True, progressive=True)
+                photos.append({'file': f'assets/history/{name}', 'source': source, 'width': im.width, 'height': im.height})
+            except Exception as error:  # a missing photo must not block the text
+                print('history photo skipped:', source, error)
+        if photos:
+            m['photos'] = photos
+    return {'source': BASE+'/historie-klubu', 'milestones': milestones}
+
+def write_content(data):
+    output = '(function(root){const content='+json.dumps(data,ensure_ascii=False)+';if(typeof module!=="undefined")module.exports=content;else root.ClubContent=content;})(globalThis);\n'
+    (ROOT/'dist'/'club-content.js').write_text(output,encoding='utf-8')
+
+def load_content():
+    text = (ROOT/'dist'/'club-content.js').read_text(encoding='utf-8')
+    start = text.index('const content=') + len('const content=')
+    return json.loads(text[start:text.rindex('};if(')+1])
+
 def main():
     roster = page(BASE+'/soupiska/MUZ')
     urls = list(dict.fromkeys(urllib.parse.urljoin(BASE,a.attrs['href']) for a in roster.all('a') if re.fullmatch(r'/player/\d+',a.attrs.get('href',''))))
@@ -148,10 +226,16 @@ def main():
                 trim_partner_logo(ROOT/'dist'/logo)
             return {**partner,'logo':logo}
         partners = list(pool.map(download_partner,partners))
-    data = {'updatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'rosterSource':BASE+'/soupiska/MUZ','partnersSource':BASE+'/partneri','players':players,'partners':partners}
-    output = '(function(root){const content='+json.dumps(data,ensure_ascii=False)+';if(typeof module!=="undefined")module.exports=content;else root.ClubContent=content;})(globalThis);\n'
-    (ROOT/'dist'/'club-content.js').write_text(output,encoding='utf-8')
-    print(f'Downloaded {len(players)} profiles/photos and {len(partners)} partner logos.')
+    story = history()
+    data = {'updatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'rosterSource':BASE+'/soupiska/MUZ','partnersSource':BASE+'/partneri','players':players,'partners':partners,'history':story}
+    write_content(data)
+    print(f'Downloaded {len(players)} profiles/photos, {len(partners)} partner logos and {len(story["milestones"])} history milestones.')
 
 if __name__ == '__main__':
-    main()
+    if '--history-only' in sys.argv:
+        data = load_content()
+        data['history'] = history()
+        write_content(data)
+        print(f'Downloaded {len(data["history"]["milestones"])} history milestones and {sum(len(m.get("photos",[])) for m in data["history"]["milestones"])} photos.')
+    else:
+        main()
