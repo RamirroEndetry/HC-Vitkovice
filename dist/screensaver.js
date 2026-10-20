@@ -7,7 +7,7 @@
   if(!kioskScreen.matches)return;
   const saver=document.createElement('div');
   saver.id='screensaver';saver.hidden=true;saver.setAttribute('role','button');saver.setAttribute('aria-label','Spořič obrazovky – dotkni se pro pokračování');
-  saver.innerHTML='<video muted loop playsinline preload="auto"></video><span class="screensaver-cta"><span class="screensaver-cta-icon">☝</span><span>Dotkni se obrazovky<small>a zapoj se do VIP tipovací soutěže</small></span></span>';
+  saver.innerHTML='<video muted loop playsinline preload="auto"></video><span class="screensaver-hint">☝ Dotkni se obrazovky</span>';
   document.body.append(saver);
   const video=saver.querySelector('video');
   let idleSince=Date.now();
@@ -21,14 +21,9 @@
     video.dataset.name=name;video.poster=`assets/intro/${name}-poster.jpg`;video.src=`assets/intro/${name}.mp4`;
     if(!saver.hidden)video.play().catch(()=>{});
   }
-  // The intro leaves a clear band for the prompt (portrait: y 1640-1716 of 1920, landscape: y 920-996 of 1080).
-  // Place the pill there in the video's own coordinates, so it never covers the video's text whatever the screen crops.
-  const cta=saver.querySelector('.screensaver-cta');
-  function placeCta(){const vw=video.videoWidth,vh=video.videoHeight;if(!vw||!vh){cta.style.opacity='0';return}const scale=Math.max(innerWidth/vw,innerHeight/vh);const centerY=(innerHeight-vh*scale)/2+(vh===1920?1678:958)*scale;cta.style.top=centerY+'px';cta.style.setProperty('--cta-scale',String(Math.max(.45,scale)));cta.style.opacity='1'}
-  video.addEventListener('loadedmetadata',placeCta);addEventListener('resize',placeCta);
   const onWelcome=()=>!!document.querySelector('#main .attract:not(.confirmation)')&&!document.querySelector('dialog[open]');
   // If the browser refuses autoplay, do not leave a frozen poster on screen; just stay on the welcome screen.
-  function show(){if(!saver.hidden)return;pickSource();saver.hidden=false;placeCta();video.currentTime=0;video.play().catch(()=>{hide();idleSince=Date.now()+600000})}
+  function show(){if(!saver.hidden)return;pickSource();saver.hidden=false;video.currentTime=0;video.play().catch(()=>{hide();idleSince=Date.now()+600000})}
   function hide(){if(saver.hidden)return;saver.hidden=true;video.pause();idleSince=Date.now()}
   // Swallow the waking tap so it does not press a button underneath.
   saver.addEventListener('click',event=>{event.stopPropagation();hide()});
