@@ -1,5 +1,6 @@
 """Refresh public roster/profile facts and partner images from the official club site."""
 import concurrent.futures
+import importlib.util
 import datetime
 import hashlib
 from html.parser import HTMLParser
@@ -65,6 +66,10 @@ def page(url):
     if not main:
         raise ValueError('Main content missing: '+url)
     return main
+
+_spec = importlib.util.spec_from_file_location('trim_partner_logos', Path(__file__).with_name('trim-partner-logos.py'))
+_trim = importlib.util.module_from_spec(_spec); _spec.loader.exec_module(_trim)
+trim_partner_logo = _trim.trim
 
 def asset(url, folder, identity):
     url = urllib.parse.urljoin(BASE, url)
@@ -138,7 +143,10 @@ def main():
     with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
         players = list(pool.map(profile,urls))
         def download_partner(partner):
-            return {**partner,'logo':asset(partner['sourceLogo'],'partners',partner['id'])}
+            logo = asset(partner['sourceLogo'],'partners',partner['id'])
+            if logo.endswith('.png'):
+                trim_partner_logo(ROOT/'dist'/logo)
+            return {**partner,'logo':logo}
         partners = list(pool.map(download_partner,partners))
     data = {'updatedAt':datetime.datetime.now(datetime.timezone.utc).isoformat(),'rosterSource':BASE+'/soupiska/MUZ','partnersSource':BASE+'/partneri','players':players,'partners':partners}
     output = '(function(root){const content='+json.dumps(data,ensure_ascii=False)+';if(typeof module!=="undefined")module.exports=content;else root.ClubContent=content;})(globalThis);\n'

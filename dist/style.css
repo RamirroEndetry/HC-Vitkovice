@@ -40,7 +40,7 @@
 .partner-rotator-head .partner-label{margin:0;overflow:hidden;text-overflow:ellipsis}
 .partner-rotator-head small{color:#7f9bbd;font-size:10px;letter-spacing:2px;margin-left:auto;white-space:nowrap}
 .partner-frame{position:relative;flex:1;min-height:0}
-.partner-slide{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.partner-slide{position:absolute;inset:0;display:flex;justify-content:center;gap:14px}.partner-slide .partner-tile{flex:0 1 calc(25% - 11px);aspect-ratio:3/2;max-height:100%}
 .partner-slide .partner-tile{animation:partner-rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i) * 90ms)}
 .partner-leave{animation:partner-fade .35s ease both;pointer-events:none}.partner-leave .partner-tile{animation:none}
 .partner-progress{height:3px;margin-top:14px;border-radius:3px;background:#ffffff14;overflow:hidden}
@@ -53,7 +53,7 @@
 @keyframes partner-fade{to{opacity:0;transform:translateY(-10px)}}
 @keyframes partner-timer{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media(max-width:1000px){.partners-strip{grid-template-columns:200px minmax(0,1fr);gap:20px;padding:18px 22px 20px}.general-partner{padding-right:20px}.partner-slide{gap:10px}}
-@media(max-width:700px){.kiosk main{padding-bottom:200px}.kiosk footer{padding-bottom:186px}.kiosk .admin-access{bottom:182px}.partners-strip{height:170px;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:14px 12px}.general-partner{padding-right:12px}.general-partner .partner-label,.partner-rotator-head small{display:none}.partner-label{font-size:9px;letter-spacing:1.5px}.general-partner .partner-tile{padding:8px}.partner-tile{padding:6px 8px;border-radius:10px}.partner-slide{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kiosk .partner-controls button{width:32px;height:32px;min-height:32px}}
+@media(max-width:700px){.kiosk main{padding-bottom:200px}.kiosk footer{padding-bottom:186px}.kiosk .admin-access{bottom:182px}.partners-strip{height:170px;grid-template-columns:96px minmax(0,1fr);gap:12px;padding:14px 12px}.general-partner{padding-right:12px}.general-partner .partner-label,.partner-rotator-head small{display:none}.partner-label{font-size:9px;letter-spacing:1.5px}.general-partner .partner-tile{padding:8px}.partner-tile{padding:6px 8px;border-radius:10px}.partner-slide{gap:8px}.partner-slide .partner-tile{flex-basis:calc(50% - 4px)}.kiosk .partner-controls button{width:32px;height:32px;min-height:32px}}
 @media(prefers-reduced-motion:reduce){.partner-slide .partner-tile,.partner-progress span{animation:none}}
 /* Vertical kiosk panel (1080x1920): full-height layout in the style of the intro video. */
 @keyframes portrait-rays{to{transform:translateX(-50%) rotate(360deg)}}
@@ -188,9 +188,23 @@
   .partners-strip{height:252px;padding:24px 44px 26px;grid-template-columns:290px minmax(0,1fr);gap:34px}
   .partner-label{font-size:14px;letter-spacing:3px;margin-bottom:14px}
   .partner-rotator-head small{font-size:13px}
-  .partner-slide{gap:18px}
+  .partner-slide{gap:18px}.partner-slide .partner-tile{flex-basis:calc(25% - 14px)}
   .kiosk .partner-controls button{width:48px;height:48px;min-height:48px;font-size:16px}
   .kiosk .admin-access{bottom:270px;right:3px}
   #toast{font-size:22px;padding:22px 34px}
   .screensaver-hint{font-size:20px;padding:16px 28px;bottom:40px;right:40px}
 }
+/* Screen transitions and polish shared by every orientation. */
+@keyframes screen-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes cta-shine{0%,60%{transform:translateX(-160%) skewX(-20deg)}100%{transform:translateX(260%) skewX(-20deg)}}
+#main>*{animation:screen-in .55s cubic-bezier(.2,.8,.2,1) both}
+.touch-start{position:relative;overflow:hidden}
+.touch-start::after{content:'';position:absolute;top:-20%;bottom:-20%;width:34%;background:linear-gradient(90deg,transparent,#9ccaff55,transparent);animation:cta-shine 4.5s ease-in-out infinite;pointer-events:none}
+.kiosk-brand{position:relative}
+.kiosk-brand::after{content:'';position:absolute;inset:auto 0 -1px;height:2px;background:linear-gradient(90deg,transparent,#155cba 25%,#7fbcff 50%,#155cba 75%,transparent)}
+@media (orientation:portrait) and (min-width:900px) and (min-height:1400px){
+  /* faint players flanking the welcome headline, like the intro video's line-up */
+  .attract::after{content:'';position:absolute;z-index:0;inset:300px -70px auto;height:1000px;pointer-events:none;opacity:.17;background:url(assets/players/55.png) left 0 top 40px/500px auto no-repeat,url(assets/players/1.png) right 0 top 0/540px auto no-repeat;-webkit-mask:linear-gradient(transparent,#000 12%,#000 45%,transparent 85%);mask:linear-gradient(transparent,#000 12%,#000 45%,transparent 85%);filter:saturate(.7) brightness(.85)}
+  .attract .featured-match{backdrop-filter:blur(6px)}
+}
+@media(prefers-reduced-motion:reduce){#main>*,.touch-start::after,.attract::before,body.kiosk::before{animation:none}}

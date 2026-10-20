@@ -8,8 +8,12 @@
   document.body.append(saver);
   const video=saver.querySelector('video');
   let idleSince=Date.now();
+  // ?video=vyska | ?video=sirka pins the cut for panels whose OS reports the wrong orientation; remembered on the device.
+  const forced=new URLSearchParams(location.search).get('video');
+  try{if(forced==='vyska'||forced==='sirka')localStorage.setItem('intro-video',forced);if(forced==='auto')localStorage.removeItem('intro-video')}catch{}
+  function wantPortrait(){let saved=null;try{saved=localStorage.getItem('intro-video')}catch{}return saved?saved==='vyska':innerHeight>innerWidth}
   function pickSource(){
-    const name=innerHeight>innerWidth?'intro-portrait':'intro';
+    const name=wantPortrait()?'intro-portrait':'intro';
     if(video.dataset.name===name)return;
     video.dataset.name=name;video.poster=`assets/intro/${name}-poster.jpg`;video.src=`assets/intro/${name}.mp4`;
     if(!saver.hidden)video.play().catch(()=>{});

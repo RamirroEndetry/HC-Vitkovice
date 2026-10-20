@@ -39,7 +39,7 @@ Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotog
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` při každém pushi do `main` publikuje složku `dist` na https://ramirroendetry.github.io/HC-Vitkovice/. Jde o statický web: živé skóre (`/api/live`) běží jen přes Cloudflare worker, na Pages kiosek funguje bez něj. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
+Workflow `.github/workflows/pages.yml` při každém pushi do `main` publikuje složku `dist` (a do `index.html` vepíše verzi commitu místo `__V__`, aby kiosky nedržely staré skripty a styly v cache) na https://ramirroendetry.github.io/HC-Vitkovice/. Jde o statický web: živé skóre (`/api/live`) běží jen přes Cloudflare worker, na Pages kiosek funguje bez něj. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
 
 ## Cloudflare
 
@@ -84,9 +84,13 @@ Na displeji na výšku (od 900 px šířky a 1400 px výšky, typicky 1080×1920
 
 ## Spořič obrazovky s intro videem
 
-Když úvodní obrazovka kiosku 45 sekund nikdo nepoužije (a hned po spuštění), přes celou obrazovku se ve smyčce přehrává 24s intro. Na panelu na výšku se použije `dist/assets/intro/intro-portrait.mp4` (1080×1920), na šířku `intro.mp4` (1920×1080). Dotyk nebo klávesa spořič zavře a vrátí úvod; dotyk nestiskne nic pod ním. Logika je v `dist/screensaver.js`.
+Když úvodní obrazovka kiosku 45 sekund nikdo nepoužije (a hned po spuštění), přes celou obrazovku se ve smyčce přehrává 24s intro. Na panelu na výšku se použije `dist/assets/intro/intro-portrait.mp4` (1080×1920), na šířku `intro.mp4` (1920×1080). Dotyk nebo klávesa spořič zavře a vrátí úvod; dotyk nestiskne nic pod ním. Logika je v `dist/screensaver.js`. Když systém panelu hlásí špatnou orientaci, otevři kiosek jednou s `?video=vyska` (nebo `?video=sirka`); volba se na zařízení zapamatuje, `?video=auto` ji zruší.
 
 Videa skládá `npm run intro:render` (na šířku) a `npm run intro:render -- --portrait` (na výšku) (Python, Pillow, numpy, ffmpeg) z loga a fotek hráčů stažených z webu klubu. Hráče a texty lze změnit v hlavičce `scripts/render-intro.py`.
+
+## Loga partnerů
+
+`python scripts/trim-partner-logos.py` ořeže bílé okraje stažených log partnerů, aby vyplnila dlaždice v liště; `scripts/sync-club-content.py` to dělá automaticky po každém stažení.
 
 ## Loga českých klubů
 
