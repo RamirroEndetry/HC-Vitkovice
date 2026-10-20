@@ -36,7 +36,7 @@ assert.doesNotMatch(el('#main').innerHTML,/id="match"/);
 assert.equal(JSON.parse(storage.values().next().value).activeMatchId,'lib');
 // Staff and direct staff route require the password. Test tips are never competition entries.
 vm.runInContext('staff()',context);assert.equal(vm.runInContext('screen',context),'welcome');assert.match(el('#dialog-content').innerHTML,/admin-login-form/);
-assert.match(el('#dialog-content').innerHTML,/class="osk"/);assert.match(el('#dialog-content').innerHTML,/data-key="q"/);assert.doesNotMatch(el('#dialog-content').innerHTML,/data-key="[ěščřžýáíé]"/);
+assert.match(el('#dialog-content').innerHTML,/class="osk osk-login"/);assert.match(el('#dialog-content').innerHTML,/data-key="q"/);assert.doesNotMatch(el('#dialog-content').innerHTML,/data-key="[ěščřžýáíé]"/);
 el('#admin-password').value='';context.document.querySelector=sel=>sel==='.osk'?{set outerHTML(v){}}:el(sel);for(const k of ['shift','d','i','g','i','2','0','2','x','backspace','6'])vm.runInContext(`pressKey(${JSON.stringify(k)})`,context);assert.equal(el('#admin-password').value,'Digi2026');vm.runInContext('pressKey("clear")',context);assert.equal(el('#admin-password').value,'');context.document.querySelector=el;
 el('#admin-password').value='wrong';vm.runInContext('unlockAdmin()',context);assert.equal(vm.runInContext('adminAuthenticated',context),false);assert.match(el('#admin-login-error').textContent,/Nesprávné/);
 el('#admin-password').value='Digi2026';vm.runInContext('unlockAdmin()',context);assert.equal(vm.runInContext('adminAuthenticated',context),true);assert.match(el('#main').innerHTML,/Spustit zkušební tipování/);
@@ -84,6 +84,12 @@ vm.runInContext('welcome()',context);assert.match(el('#main').innerHTML,/&lt;b&g
 vm.runInContext('adminAuthenticated=true;staff()',context);assert.match(el('#main').innerHTML,/id="prizes-form"/);
 context.document.querySelectorAll=sel=>sel.startsWith('#prize-rows .prize-row')?[{querySelector:n=>({value:n==='[name=title]'?'  Zlatý  puk ':'VIP večeře'})},{querySelector:n=>({value:''})}]:[];
 vm.runInContext('savePrizes()',context);assert.deepEqual(JSON.parse(storage.values().next().value).prizes.lib,[{title:'Zlatý puk',detail:'VIP večeře'}]);context.document.querySelectorAll=()=>[];
+// The staff keyboard dock types into whichever field was focused last, keeps Czech letters and refuses letters in number fields.
+assert.match(el('#main').innerHTML,/keyboard-toggle/);assert.match(el('#main').innerHTML,/Klávesnice: vypnuta/);
+const titleField={type:'text',value:'',isConnected:true,disabled:false,focus(){},dispatchEvent(){},getAttribute(){return 'Cena 1'},matches:s=>s.includes('input[type=text]')};el('#dialog').open=false;vm.runInContext('keyboardDock=true;keyboardTarget=null',context);context.keyboardTargetStub=titleField;vm.runInContext('keyboardTarget=keyboardTargetStub',context);
+for(const k of ['shift','ř','í','z','e','k',' ','2'])vm.runInContext(`pressKey(${JSON.stringify(k)})`,context);assert.equal(titleField.value,'Řízek 2');
+const numberField={...titleField,type:'number',value:''};context.keyboardTargetStub=numberField;vm.runInContext('keyboardTarget=keyboardTargetStub',context);for(const k of ['a','3','ě','1','backspace'])vm.runInContext(`pressKey(${JSON.stringify(k)})`,context);assert.equal(numberField.value,'3');
+vm.runInContext('keyboardDock=false;keyboardTarget=null',context);
 vm.runInContext('welcome()',context);assert.match(el('#main').innerHTML,/Zlatý puk/);assert.doesNotMatch(el('#main').innerHTML,/Podepsaný dres/);vm.runInContext('adminAuthenticated=false;form();outcome="1"',context);
 // A different visitor can still submit in the 10th minute; a score cannot be confirmed yet.
 now='2026-10-20T17:39:00+02:00';el('#guest-name').value='Jiný člověk';vm.runInContext('submitEntry()',context);assert.equal(JSON.parse(storage.values().next().value).entries.length,2);

@@ -23,9 +23,9 @@ Tipy se zamknou samy 10 minut po začátku (administrace ukazuje přesné časov
 
 Vyhrává nejmenší součet absolutních odchylek domácího a hostujícího skóre; přesný tip má odchylku nula. Při shodě rozhoduje správný volitelný tip na počet gólů a potom dřívější čas odeslání tipu (`savedAt`) — kdo tipuje dřív a stejně přesně, vyhrává sám. Tipy bez časového razítka se řadí za ostatní. Tabulka pořadí i vyhlášení ukazují čas tipu.
 
-## Dotyková klávesnice obsluhy
+## Dotyková klávesnice
 
-Přihlášení do administrace má vlastní dotykovou klávesnici (číslice, písmena bez háčků a čárek, Shift, mazání, mezera) v klubovém vzhledu s logem; fyzická klávesnice funguje dál. Rozvržení je v `keyboardMarkup()` v `dist/app.js`.
+Přihlášení do administrace má vlastní dotykovou klávesnici (číslice, písmena bez háčků a čárek, Shift, mazání, mezera) v klubovém vzhledu s logem; fyzická klávesnice funguje dál. V administraci je navíc přepínač **⌨ Klávesnice: zapnuta/vypnuta** – po zapnutí se dole nad partnery ukotví klávesnice i s českými znaky (ě š č ř ž ý á í é ú ů ď ť ň), která píše do naposledy aktivního pole: ceny a výsledek v administraci i jméno návštěvníka ve formuláři tipu. Tlačítko „Další pole“ přeskočí na následující vstup. Volba se ukládá do zařízení (`localStorage` klíč `kiosk-keyboard`). Rozvržení je v `keyboardMarkup()` v `dist/app.js`.
 
 ## Zkušební tipování administrátora
 

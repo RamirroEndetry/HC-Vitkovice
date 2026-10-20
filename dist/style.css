@@ -396,3 +396,32 @@
   .kiosk .osk-clear{max-width:200px;font-size:18px}
   .kiosk .osk-enter{max-width:260px;font-size:22px}
 }
+
+/* Kiosk keyboard dock: shown on the staff and entry screens when staff switch it on. */
+.osk-dock{position:fixed;left:0;right:0;bottom:218px;z-index:40;padding:12px 18px 16px;background:linear-gradient(180deg,#0b2446f5,#071b34fa);border-top:1px solid #7fbcff40;box-shadow:0 -18px 50px #000a;backdrop-filter:blur(12px)}
+.osk-dock[hidden]{display:none}
+.osk-dock-head{display:flex;justify-content:space-between;align-items:center;gap:14px;margin:0 auto 10px;max-width:980px;color:#8fc1ff;font-size:11px;letter-spacing:2.5px;text-transform:uppercase}
+.osk-dock-target{color:#cfe3ff;font-weight:600;letter-spacing:0;text-transform:none;font-size:13px;text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.osk-dock .osk{max-width:980px;margin:0 auto;gap:7px}
+.osk-dock .osk-row{gap:7px}
+.kiosk .osk-dock .osk-key{max-width:60px;height:50px;min-height:50px;font-size:20px;border-radius:9px}
+.kiosk .osk-dock .osk-wide{max-width:92px}
+.kiosk .osk-dock .osk-clear{max-width:150px;font-size:13px}
+.kiosk .osk-dock .osk-enter{max-width:200px;font-size:14px}
+body.keyboard-docked .kiosk main{padding-bottom:620px}
+body.keyboard-docked .kiosk .admin-access{display:none}
+.keyboard-toggle{border:1px solid #ffffff2e;border-radius:999px;padding:10px 16px;color:#cfe3ff}
+.keyboard-toggle[aria-pressed=true]{background:#155cba;border-color:#7fbcff80;color:#fff}
+@media(max-width:700px){.osk-dock{bottom:0;padding:8px 8px 10px}.osk-dock .osk,.osk-dock .osk-row{gap:4px}.kiosk .osk-dock .osk-key{height:40px;min-height:40px;font-size:15px;border-radius:6px}.kiosk .osk-dock .osk-clear{font-size:10px}.kiosk .osk-dock .osk-enter{font-size:11px}.osk-dock-head{display:none}body.keyboard-docked .kiosk main{padding-bottom:300px}}
+@media (orientation:portrait) and (min-width:900px) and (min-height:1400px){
+  .osk-dock{bottom:252px;padding:16px 28px 22px}
+  .osk-dock-head{font-size:14px;margin-bottom:14px}
+  .osk-dock-target{font-size:17px}
+  .osk-dock .osk,.osk-dock .osk-row{gap:10px}
+  .kiosk .osk-dock .osk-key{max-width:76px;height:66px;min-height:66px;font-size:26px;border-radius:12px}
+  .kiosk .osk-dock .osk-wide{max-width:118px}
+  .kiosk .osk-dock .osk-clear{max-width:190px;font-size:17px}
+  .kiosk .osk-dock .osk-enter{max-width:250px;font-size:19px}
+  body.keyboard-docked .kiosk main{padding-bottom:760px}
+  .keyboard-toggle{font-size:20px;padding:14px 22px}
+}
