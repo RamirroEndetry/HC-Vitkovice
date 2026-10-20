@@ -11,6 +11,10 @@ Webový prototyp pro sdílenou obrazovku ve VIP zóně. Repozitář: https://git
 
 Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Tipování se automaticky OTEVŘE v plánovaném začátku zápasu a běží do konce 3. třetiny. Uzavření po 3. třetině potvrzuje obsluha; neodvozuje se z 60 minut běžného času, protože hokej má přestávky a přerušení. Bez potvrzení obsluhy zůstává tipování otevřené i po skutečném konci třetiny. Živý poskytovatel zatím není připojený. Připravené rozhraní po připojení platných dat automaticky uzavře tipy při stavu `regulation_end`; bez dat je nutné ruční uzavření obsluhou. Stav soutěže se kontroluje také při odeslání. Každý návštěvník má samostatný záznam; potvrzení záznam nenahrazuje. Jeden tip na normalizované jméno a zápas na tomto zařízení. Ověření totožnosti ani synchronizace dalších kiosků zatím neexistuje. Staré tipy předchozího osobního prototypu se do kioskové soutěže nepřenášejí.
 
+## Ceny a přehled soutěžících
+
+Úvodní obrazovka má pod kartou zápasu dva panely (na širokém displeji po stranách): vlevo „Co můžeš vyhrát“ se seznamem cen pro aktivní zápas, vpravo „Kdo už tipuje“ s posledními čtyřmi tipy a počtem všech. Bez tipů ukazuje výzvu „Zatím nikdo nehrál. Buď první a tipuj!“. Ceny jsou uložené pro každý zápas zvlášť (`state.prizes[matchId]`), obsluha je upravuje v administraci v bloku „Ceny pro tento zápas“ (až šest položek, název + poznámka); dokud je neuloží, platí výchozí trojice. První cena se zmiňuje i při vyhlášení vítěze.
+
 ## Obsluha a vyhodnocení
 
 Klikněte na malé ozubené kolečko vpravo dole a zadejte dohodnuté administrátorské heslo. Také `/#obsluha` vyžaduje heslo. Zvolte aktivní utkání pro celou VIP zónu. Volba se ukládá na tomto zařízení a po obnovení stránky zůstane stejné utkání i po jeho začátku nebo skončení; kiosek nepřeskočí na další zápas. Při úplně prvním spuštění se předvybere nejbližší budoucí zápas (pokud žádný není, poslední uvedený); obsluha jej před akcí ověří. Návštěvnické obrazovky nemají výběr zápasu.

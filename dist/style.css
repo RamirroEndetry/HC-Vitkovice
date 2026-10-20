@@ -75,35 +75,35 @@
   .kiosk-brand .text-button{font-size:18px;color:#cfe3ff;border:1px solid #ffffff2e;border-radius:999px;padding:12px 24px}
   .kiosk main{max-width:none;padding:0 50px 270px;min-height:calc(100dvh - 118px)}
   /* welcome / attract */
-  .attract,.attract:has(.featured-match){min-height:calc(100dvh - 118px - 270px);padding:30px 0 22px;justify-content:space-between;gap:14px;background:none;overflow:hidden}
+  .attract,.attract:has(.featured-match){min-height:calc(100dvh - 118px - 270px);padding:18px 0 16px;justify-content:space-between;gap:10px;background:none;overflow:hidden}
   .attract>*{position:relative;z-index:1}
   .attract::before{content:'';position:absolute;z-index:0;top:-480px;left:50%;width:1500px;height:1500px;transform:translateX(-50%);background:repeating-conic-gradient(from 0deg,#6fb2ff2e 0 3.5deg,transparent 3.5deg 20deg);-webkit-mask:radial-gradient(circle,#000 0,#0008 22%,transparent 52%);mask:radial-gradient(circle,#000 0,#0008 22%,transparent 52%);animation:portrait-rays 90s linear infinite;pointer-events:none}
-  .attract>.attract-logo,.attract:has(.featured-match)>.attract-logo{width:170px;height:170px;margin:0;filter:drop-shadow(0 0 34px #5ba5fa99) drop-shadow(0 0 80px #155cba88)}
+  .attract>.attract-logo,.attract:has(.featured-match)>.attract-logo{width:120px;height:120px;margin:0;filter:drop-shadow(0 0 34px #5ba5fa99) drop-shadow(0 0 80px #155cba88)}
   .attract .eyebrow{font-size:19px;letter-spacing:7px;color:#8fc1ff}
-  .attract h1,.attract:has(.featured-match)>h1{font:800 136px/.9 'Barlow Condensed',sans-serif;letter-spacing:2px;margin:0;text-shadow:0 0 50px #155cbacc,0 6px 30px #0009}
-  .attract>p{font-size:28px;line-height:1.4;margin:0;color:#b9d1ee;letter-spacing:.5px}
+  .attract h1,.attract:has(.featured-match)>h1{font:800 112px/.9 'Barlow Condensed',sans-serif;letter-spacing:2px;margin:0;text-shadow:0 0 50px #155cbacc,0 6px 30px #0009}
+  .attract>p{font-size:24px;line-height:1.3;margin:0;color:#b9d1ee;letter-spacing:.5px}
   /* match card */
-  .attract .featured-match{max-width:none;width:100%;min-height:0;margin:6px 0;padding:28px 44px;border-radius:22px;border:1px solid #7fbcff33;background-color:#0a2445e6;box-shadow:0 0 0 1px #ffffff0a,0 30px 80px #000a,inset 0 1px 0 #ffffff1a}
+  .attract .featured-match{max-width:none;width:100%;min-height:0;margin:6px 0;padding:20px 40px;border-radius:22px;border:1px solid #7fbcff33;background-color:#0a2445e6;box-shadow:0 0 0 1px #ffffff0a,0 30px 80px #000a,inset 0 1px 0 #ffffff1a}
   .attract .featured-match:after{font-size:190px;bottom:-40px}
   .attract .featured-match .hero-top{font-size:15px;letter-spacing:2.5px}
-  .attract .featured-match .matchup{padding:18px 0 14px}
-  .attract .featured-match .team-badge{width:150px;height:150px}
-  .attract .featured-match .team .team-badge img{width:142px;height:142px;filter:drop-shadow(0 0 20px #5ba5fa55)}
+  .attract .featured-match .matchup{padding:10px 0 6px}
+  .attract .featured-match .team-badge{width:118px;height:118px}
+  .attract .featured-match .team .team-badge img{width:112px;height:112px;filter:drop-shadow(0 0 20px #5ba5fa55)}
   .attract .featured-match .team-logo-fallback{font-size:80px}
-  .attract .featured-match .team strong{font:800 46px 'Barlow Condensed',sans-serif;margin-top:14px;letter-spacing:1px}
+  .attract .featured-match .team strong{font:800 40px 'Barlow Condensed',sans-serif;margin-top:8px;letter-spacing:1px}
   .attract .featured-match .team small{font-size:15px;letter-spacing:3px}
   .attract .featured-match .versus{font:800 54px 'Barlow Condensed',sans-serif;color:#5ba5fa}
   .attract .featured-match .match-info{font-size:19px;color:#a8bfdb}
-  .attract .featured-match .countdown{margin-top:20px;padding-top:18px;font-size:19px}
-  .attract .featured-match .countdown b{font:700 46px 'Barlow Condensed',sans-serif;letter-spacing:3px}
+  .attract .featured-match .countdown{margin-top:12px;padding-top:12px;font-size:18px}
+  .attract .featured-match .countdown b{font:700 40px 'Barlow Condensed',sans-serif;letter-spacing:3px}
   /* call to action like the video's pill */
-  .attract .touch-start,.attract:has(.featured-match)>.touch-start{width:100%;min-height:124px;margin:4px 0;padding:20px 50px;gap:32px;border-radius:999px;font-size:44px;justify-content:space-between;animation:portrait-cta 2.6s ease-in-out infinite}
-  .attract .touch-start span{flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:1px;text-transform:uppercase}
+  .attract .touch-start,.attract:has(.featured-match)>.touch-start{width:100%;min-height:100px;margin:4px 0 0;padding:14px 44px;gap:28px;border-radius:999px;font-size:38px;justify-content:space-between;animation:portrait-cta 2.6s ease-in-out infinite}
+  .attract .attract-center>.text-button{color:#cfe3ff}.attract .touch-start span{flex:1;font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:1px;text-transform:uppercase}
   .attract .touch-start small{font:500 21px 'DM Sans',sans-serif;text-transform:none;letter-spacing:0;margin-top:6px}
-  .attract>.text-button{font-size:24px;color:#cfe3ff;padding:14px 20px}
+  .attract .attract-center>.text-button{font-size:22px;color:#cfe3ff;padding:10px 20px}
   .attract .club-navigation{gap:20px;margin:0}
-  .attract .club-navigation button{font-size:24px;padding:22px 40px;border-radius:999px;min-width:300px}
-  .attract-bottom{padding:10px 70px 0;font-size:15px;letter-spacing:6px}
+  .attract .club-navigation button{font-size:22px;padding:14px 36px;border-radius:999px;min-width:280px;min-height:0}
+  .attract-bottom{padding:4px 70px 0;font-size:14px;letter-spacing:6px}
   /* inner screens */
   .kiosk-head{padding:22px 0 18px}
   .kiosk-head .text-button{font-size:22px;color:#cfe3ff}
@@ -284,4 +284,75 @@
   .history-photo{max-width:none}
   .history-photo img{max-height:640px}
   .history-photo figcaption{font-size:14px;padding:14px 18px}
+}
+/* Welcome screen side panels: prizes on the left, live participants on the right. */
+.attract-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;width:100%;max-width:1040px;align-items:start}
+.attract-center{display:flex;flex-direction:column;align-items:center;min-width:0}
+.attract-center .featured-match{margin-top:0}
+.side-panels{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:100%}
+.side-panel{text-align:left;color:#fff;background:#0a2445d9;border:1px solid #7fbcff2e;border-radius:16px;padding:22px 24px;box-shadow:0 20px 50px #00000055;min-width:0}
+.side-panel .eyebrow{color:#8fc1ff;letter-spacing:3px;font-size:10px}
+.side-panel h2{font:800 26px 'Barlow Condensed',sans-serif;margin:6px 0 14px;text-transform:uppercase}
+.side-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.count-badge{display:inline-grid;place-items:center;min-width:44px;height:44px;padding:0 12px;border-radius:999px;background:#155cba;font:800 20px 'Barlow Condensed',sans-serif;box-shadow:0 0 24px #5ba5fa66}
+.side-note{font-size:11px;line-height:1.6;color:#8fa9c8;margin:14px 0 0}
+.prize-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.prize-list li{display:flex;align-items:center;gap:14px;padding:12px 14px;border-radius:10px;background:#ffffff0a;border:1px solid #ffffff12}
+.prize-list li:first-child{background:linear-gradient(135deg,#3b2f0f,#5a4414);border-color:#d7b25c66}
+.prize-list strong{display:block;font-size:14px;line-height:1.3}
+.prize-list small{display:block;margin-top:4px;font-size:11px;color:#a9bcd6}
+.prize-place{display:inline-grid;place-items:center;flex:none;width:40px;height:40px;border-radius:50%;background:#ffffff14;border:1px solid #ffffff2a;font:800 17px 'Barlow Condensed',sans-serif;color:#cfe3ff}
+.prize-list li:first-child .prize-place{background:linear-gradient(135deg,#f3d98b,#c8a24a);border-color:#f1cf7a;color:#3a2b06}
+.prize-list li:nth-child(2) .prize-place{background:linear-gradient(135deg,#e8edf3,#aab6c6);color:#2f3d50;border-color:#dfe6ee}
+.prize-list li:nth-child(3) .prize-place{background:linear-gradient(135deg,#d9a06c,#9a5f33);color:#2b1708;border-color:#e0b48a}
+.participant-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.participant-list li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:#ffffff0a;border:1px solid #ffffff12;animation:screen-in .4s both}
+.participant-list strong{display:block;font-size:14px;overflow-wrap:anywhere}
+.participant-list small{display:block;font-size:11px;color:#8fa9c8;margin-top:2px}
+.participant-list b{margin-left:auto;font:800 22px 'Barlow Condensed',sans-serif;letter-spacing:2px;white-space:nowrap;color:#cfe3ff}
+.participant-avatar{display:inline-grid;place-items:center;flex:none;width:38px;height:38px;border-radius:50%;background:#155cba;font:700 16px 'Barlow Condensed',sans-serif}
+.participants-empty{text-align:center;padding:22px 10px 10px}
+.participants-empty-icon{display:block;font-size:40px;margin-bottom:8px;filter:drop-shadow(0 0 16px #5ba5fa88)}
+.participants-empty strong{display:block;font:800 26px 'Barlow Condensed',sans-serif;text-transform:uppercase}
+.participants-empty p{color:#b9d1ee;font-size:15px;margin:6px 0 16px}
+.participants-empty small{display:block;color:#8fa9c8;font-size:11px}
+.participants-empty .primary{border-radius:999px;padding:14px 26px}
+/* staff form */
+.prize-row{display:grid;grid-template-columns:40px minmax(0,1.3fr) minmax(0,1fr) 44px;gap:10px;align-items:center;margin-bottom:10px}
+.prize-row .prize-place{background:#e9f0f9;border-color:#d3dfee;color:#2f4d73}
+.prize-row .text-button{font-size:22px;color:#8a1f1f;padding:0;min-height:44px}
+.prize-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
+.prizes-admin .kiosk-card input,.prize-row input{min-height:48px;font-size:14px}
+@media(max-width:700px){.side-panels{grid-template-columns:1fr}.prize-row{grid-template-columns:32px minmax(0,1fr) 36px}.prize-row [name=detail]{grid-column:2;}.prize-actions{flex-direction:column;align-items:stretch}}
+/* wide landscape screens: real side columns around the match card */
+@media (min-width:1500px) and (orientation:landscape){
+  .attract-grid{grid-template-columns:300px minmax(0,1fr) 300px;max-width:1400px;gap:22px}
+  .attract-grid .side-panels{display:contents}
+  .attract-grid .prizes-panel{order:-1}
+  .attract-grid .participants-panel{order:1}
+}
+@media (orientation:portrait) and (min-width:900px) and (min-height:1400px){
+  .attract-grid{max-width:none;gap:14px}
+  .side-panels{gap:14px}
+  .side-panel{padding:20px 22px;border-radius:18px}
+  .side-panel .eyebrow{font-size:13px}
+  .side-panel h2{font-size:30px;margin:6px 0 12px}
+  .prize-list{gap:8px}
+  .prize-list li{padding:10px 12px}
+  .prize-list strong{font-size:17px}
+  .prize-list small{font-size:13px}
+  .prize-place{width:42px;height:42px;font-size:19px}
+  .side-note{font-size:13px;margin-top:12px}
+  .participant-list li{padding:9px 12px}
+  .participant-list strong{font-size:17px}
+  .participant-list small{font-size:12px}
+  .participant-list b{font-size:24px}
+  .count-badge{min-width:48px;height:48px;font-size:22px}
+  .participants-empty{padding:14px 6px 6px}
+  .participants-empty-icon{font-size:44px}
+  .participants-empty strong{font-size:30px}
+  .participants-empty p{font-size:18px}
+  .participants-empty small{font-size:13px}
+  .participants-empty .primary{font-size:18px;min-height:0;padding:14px 28px}
+  .prize-row input{min-height:60px;font-size:20px}
 }
