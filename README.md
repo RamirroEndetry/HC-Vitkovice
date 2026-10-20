@@ -13,7 +13,7 @@ Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Ti
 
 ## Ceny a přehled soutěžících
 
-Úvodní obrazovka má pod kartou zápasu dva panely (na širokém displeji po stranách): vlevo „Co můžeš vyhrát“ se seznamem cen pro aktivní zápas, vpravo „Kdo už tipuje“ s posledními čtyřmi tipy a počtem všech. Bez tipů ukazuje výzvu „Zatím nikdo nehrál. Buď první a tipuj!“. Ceny jsou uložené pro každý zápas zvlášť (`state.prizes[matchId]`), obsluha je upravuje v administraci v bloku „Ceny pro tento zápas“ (až šest položek, název + poznámka); dokud je neuloží, platí výchozí trojice. První cena se zmiňuje i při vyhlášení vítěze.
+Úvodní obrazovka má pod kartou zápasu dva panely (na širokém displeji po stranách): vlevo „Co můžeš vyhrát – Ceny pro tento zápas“ se seznamem cen pro aktivní zápas, vpravo „Kdo už tipuje“ s posledními čtyřmi tipy a počtem všech. Bez tipů ukazuje výzvu „Zatím nikdo nehrál. Buď první a tipuj!“. Ceny jsou uložené pro každý zápas zvlášť (`state.prizes[matchId]`), obsluha je upravuje v administraci v bloku „Ceny pro tento zápas“ (až šest položek, název + poznámka); dokud je neuloží, platí výchozí trojice. První cena se zmiňuje i při vyhlášení vítěze.
 
 ## Obsluha a vyhodnocení
 
