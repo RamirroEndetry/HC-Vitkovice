@@ -23,6 +23,10 @@ Při konci 3. třetiny stiskněte **Konec 3. třetiny — uzavřít tipy**. Uzav
 
 Vyhrává nejmenší součet absolutních odchylek domácího a hostujícího skóre; přesný tip má odchylku nula. Při shodě rozhoduje správný volitelný tip na počet gólů, pak se vyhlásí všichni společně. Výběr 1/X/2 musí odpovídat zadanému skóre; nepřiděluje samostatné body. Bez tipů není vyhlášen vítěz. Pravidla, rozdělení cen při shodě a postup při odložení musí potvrdit pořadatel.
 
+## Dotyková klávesnice obsluhy
+
+Přihlášení do administrace má vlastní dotykovou klávesnici (číslice, písmena bez háčků a čárek, Shift, mazání, mezera) v klubovém vzhledu s logem; fyzická klávesnice funguje dál. Rozvržení je v `keyboardMarkup()` v `dist/app.js`.
+
 ## Zkušební tipování administrátora
 
 Po odemknutí klikněte na **Spustit zkušební tipování**. Formulář lze použít i před začátkem utkání. Je výrazně označený jako zkušební. Zkouška projde stejnou validací a potvrzením jako návštěvnický tip, ale ukládá se jen do dočasné paměti administrátora; nikdy do soutěžních tipů ani vyhodnocení vítězů. Čas utkání a skutečný stav tipování se nemění.

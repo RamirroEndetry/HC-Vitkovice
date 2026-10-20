@@ -21,7 +21,7 @@ assert.equal(Competition.evaluate([],{home:2,away:1}).length,0);
 assert.equal(Competition.evaluate([tip('Eva Nová',2,1)],null).length,0);
 assert.equal(Competition.evaluate([tip('Eva Nová',2,1)],{home:-1,away:1}).length,0);
 const elements=new Map();
-const el=key=>{if(!elements.has(key))elements.set(key,{innerHTML:'',textContent:'',value:'',checked:false,setAttribute(){},focus(){},style:{},classList:{toggle(){}},addEventListener(type,fn){this[type]=fn},showModal(){this.open=true},close(){this.open=false}});return elements.get(key)};
+const el=key=>{if(!elements.has(key))elements.set(key,{innerHTML:'',textContent:'',value:'',checked:false,setAttribute(){},focus(){},style:{},classList:{toggle(){},add(){},remove(){}},addEventListener(type,fn){this[type]=fn},showModal(){this.open=true},close(){this.open=false}});return elements.get(key)};
 let now='2026-10-19T10:00:00+02:00';class TestDate extends Date{constructor(...args){super(...(args.length?args:[now]))}static now(){return new Date(now).getTime()}}
 const storage=new Map();let failStorage=false;
 const context={console,Competition,LiveMatch,HockeyTeams,ClubContent,AbortController,fetch:async()=>({ok:false,status:503}),Date:TestDate,Intl,crypto:{randomUUID:()=>String(Math.random())},localStorage:{getItem:k=>storage.get(k)||null,setItem(k,v){if(failStorage)throw Error('full');storage.set(k,v)}},document:{querySelector:el,querySelectorAll:()=>[],addEventListener(){}},location:{hash:'',pathname:'/',search:''},history:{replaceState(){}},setTimeout(){},setInterval(fn){context.tick=fn},clearTimeout(){},addEventListener(){}};
@@ -33,6 +33,8 @@ assert.doesNotMatch(el('#main').innerHTML,/id="match"/);
 assert.equal(JSON.parse(storage.values().next().value).activeMatchId,'lib');
 // Staff and direct staff route require the password. Test tips are never competition entries.
 vm.runInContext('staff()',context);assert.equal(vm.runInContext('screen',context),'welcome');assert.match(el('#dialog-content').innerHTML,/admin-login-form/);
+assert.match(el('#dialog-content').innerHTML,/class="osk"/);assert.match(el('#dialog-content').innerHTML,/data-key="q"/);assert.doesNotMatch(el('#dialog-content').innerHTML,/data-key="[ěščřžýáíé]"/);
+el('#admin-password').value='';context.document.querySelector=sel=>sel==='.osk'?{set outerHTML(v){}}:el(sel);for(const k of ['shift','d','i','g','i','2','0','2','x','backspace','6'])vm.runInContext(`pressKey(${JSON.stringify(k)})`,context);assert.equal(el('#admin-password').value,'Digi2026');vm.runInContext('pressKey("clear")',context);assert.equal(el('#admin-password').value,'');context.document.querySelector=el;
 el('#admin-password').value='wrong';vm.runInContext('unlockAdmin()',context);assert.equal(vm.runInContext('adminAuthenticated',context),false);assert.match(el('#admin-login-error').textContent,/Nesprávné/);
 el('#admin-password').value='Digi2026';vm.runInContext('unlockAdmin()',context);assert.equal(vm.runInContext('adminAuthenticated',context),true);assert.match(el('#main').innerHTML,/Spustit zkušební tipování/);
 const earlySnapshot=storage.values().next().value;

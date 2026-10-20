@@ -356,3 +356,42 @@
   .participants-empty .primary{font-size:18px;min-height:0;padding:14px 28px}
   .prize-row input{min-height:60px;font-size:20px}
 }
+/* Staff login dialog with the club touch keyboard. */
+.kiosk dialog.admin-dialog{max-width:760px;padding:0;overflow:hidden;background:#071b34;color:#fff;border:1px solid #7fbcff33;box-shadow:0 40px 120px #000c}
+.admin-dialog .close{color:#cfe3ff;z-index:2}
+.admin-login-head{position:relative;display:flex;align-items:center;gap:18px;padding:28px 34px 22px;background:radial-gradient(ellipse at 20% 0,#155cba66,transparent 60%),linear-gradient(180deg,#0b2446,#071b34);border-bottom:1px solid #ffffff14}
+.admin-login-head img{width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 0 18px #5ba5fa88)}
+.admin-login-head .eyebrow{color:#8fc1ff;letter-spacing:4px}
+.admin-login-head h1{margin:6px 0 0;font-size:40px;color:#fff;text-transform:uppercase}
+.admin-login-body{padding:22px 34px 30px}
+.admin-login-body .field-label{color:#b9d1ee;margin:0 0 10px;font-size:13px;letter-spacing:1px;text-transform:uppercase}
+.admin-login-body input{width:100%;min-height:64px;font-size:30px;letter-spacing:8px;text-align:center;background:#ffffff0f;border:1px solid #7fbcff55;color:#fff;border-radius:12px;box-shadow:inset 0 2px 10px #0006}
+.admin-login-body input::placeholder{letter-spacing:0;font-size:15px;color:#7f9bbd}
+.admin-login-body #admin-login-error{color:#ff9d93;text-align:center;margin:8px 0 2px;font-size:13px}
+.admin-login-body form>.primary{display:none}
+.osk{display:grid;gap:8px;margin-top:10px;user-select:none}
+.osk-row{display:flex;justify-content:center;gap:8px}
+.kiosk .osk-key{flex:1 1 0;max-width:56px;min-width:0;height:56px;min-height:56px;padding:0;border-radius:10px;border:1px solid #ffffff1f;background:linear-gradient(180deg,#1a3f6e,#102c4c);color:#fff;font:600 22px 'DM Sans',Arial,sans-serif;box-shadow:0 4px 0 #061527,0 6px 14px #0007;transition:transform .06s,box-shadow .06s}
+.kiosk .osk-key:active{transform:translateY(3px);box-shadow:0 1px 0 #061527,0 2px 6px #0007;background:#155cba}
+.kiosk .osk-wide{flex-grow:1.6;max-width:88px}
+.osk-shift[aria-pressed=true]{background:#5ba5fa;color:#071b34;border-color:#9ccaff}
+.osk-bottom{margin-top:4px}
+.kiosk .osk-clear{flex-grow:2.7;max-width:150px;font-size:14px;background:linear-gradient(180deg,#3a1d22,#2a1216);border-color:#ff9d9333;color:#ffb4ab}
+.kiosk .osk-space{flex-grow:6;max-width:360px}
+.kiosk .osk-space::after{content:'';display:block;width:40%;height:3px;margin:auto;border-radius:3px;background:#ffffff40}
+.kiosk .osk-enter{flex-grow:3.4;max-width:190px;font-size:16px;font-weight:700;background:linear-gradient(180deg,#2f7be0,#155cba);border-color:#7fbcff80;box-shadow:0 4px 0 #0b3a7a,0 6px 20px #155cba88}
+@media(max-width:700px){.admin-login-head{padding:20px 18px 16px;gap:12px}.admin-login-head img{width:52px;height:52px}.admin-login-head h1{font-size:30px}.admin-login-body{padding:16px 10px 18px}.osk{gap:5px}.osk-row{gap:5px}.kiosk .osk-key{height:46px;min-height:46px;font-size:17px;border-radius:7px}.kiosk .osk-clear{font-size:11px}.kiosk .osk-enter{font-size:13px}.admin-login-body input{min-height:54px;font-size:24px}}
+@media (orientation:portrait) and (min-width:900px) and (min-height:1400px){
+  .kiosk dialog.admin-dialog{max-width:940px;padding:0}
+  .admin-login-head{padding:36px 44px 28px;gap:24px}
+  .admin-login-head img{width:96px;height:96px}
+  .admin-login-head h1{font-size:54px}
+  .admin-login-body{padding:28px 44px 40px}
+  .admin-login-body input{min-height:86px;font-size:40px}
+  .osk{gap:12px;margin-top:16px}
+  .osk-row{gap:12px}
+  .kiosk .osk-key{max-width:72px;height:72px;min-height:72px;font-size:28px;border-radius:14px}
+  .kiosk .osk-wide{max-width:112px}
+  .kiosk .osk-clear{max-width:200px;font-size:18px}
+  .kiosk .osk-enter{max-width:260px;font-size:22px}
+}
