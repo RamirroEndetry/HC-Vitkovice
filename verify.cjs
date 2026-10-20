@@ -36,7 +36,7 @@ assert.doesNotMatch(el('#main').innerHTML,/id="match"/);
 assert.equal(JSON.parse(storage.values().next().value).activeMatchId,'lib');
 // Staff and direct staff route require the password. Test tips are never competition entries.
 vm.runInContext('staff()',context);assert.equal(vm.runInContext('screen',context),'welcome');assert.match(el('#dialog-content').innerHTML,/admin-login-form/);
-assert.match(el('#dialog-content').innerHTML,/class="osk osk-login"/);assert.match(el('#dialog-content').innerHTML,/data-key="q"/);assert.doesNotMatch(el('#dialog-content').innerHTML,/data-key="[ěščřžýáíé]"/);
+assert.match(el('#dialog-content').innerHTML,/class="osk osk-mode-login"/);assert.match(el('#dialog-content').innerHTML,/data-key="q"/);assert.doesNotMatch(el('#dialog-content').innerHTML,/data-key="[ěščřžýáíé]"/);
 el('#admin-password').value='';context.document.querySelector=sel=>sel==='.osk'?{set outerHTML(v){}}:el(sel);for(const k of ['shift','d','i','g','i','2','0','2','x','backspace','6'])vm.runInContext(`pressKey(${JSON.stringify(k)})`,context);assert.equal(el('#admin-password').value,'Digi2026');vm.runInContext('pressKey("clear")',context);assert.equal(el('#admin-password').value,'');context.document.querySelector=el;
 el('#admin-password').value='wrong';vm.runInContext('unlockAdmin()',context);assert.equal(vm.runInContext('adminAuthenticated',context),false);assert.match(el('#admin-login-error').textContent,/Nesprávné/);
 el('#admin-password').value='Digi2026';vm.runInContext('unlockAdmin()',context);assert.equal(vm.runInContext('adminAuthenticated',context),true);assert.match(el('#main').innerHTML,/Spustit zkušební tipování/);
