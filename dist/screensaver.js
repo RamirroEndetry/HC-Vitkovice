@@ -7,7 +7,7 @@
   if(!kioskScreen.matches)return;
   const saver=document.createElement('div');
   saver.id='screensaver';saver.hidden=true;saver.setAttribute('role','button');saver.setAttribute('aria-label','Spořič obrazovky – dotkni se pro pokračování');
-  saver.innerHTML='<video muted loop playsinline preload="auto"></video><span class="screensaver-hint">☝ Dotkni se obrazovky</span>';
+  saver.innerHTML='<video muted loop playsinline preload="auto"></video><span class="screensaver-cta"><span class="screensaver-cta-icon">☝</span><span>Dotkni se obrazovky<small>a zapoj se do VIP tipovací soutěže</small></span></span>';
   document.body.append(saver);
   const video=saver.querySelector('video');
   let idleSince=Date.now();

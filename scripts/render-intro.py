@@ -425,15 +425,7 @@ def scene_logo(f, t):
     for k, (spr, y) in enumerate(SUB_LINES):
         a2 = prog(lt, 1.8 + k * 0.15, 2.5 + k * 0.15)
         if a2 > 0: center_blit(f, spr, y, a2, 1.0, (1 - out_cubic(a2)) * 20)
-    a3 = prog(lt, 2.6, 3.1)
-    if a3 > 0:
-        pulse = 0.5 + 0.5 * math.sin((lt - 2.6) * 4)
-        pw, ph = T_TOUCH.shape[1] + 90, 76
-        px, py = W / 2 - pw / 2, TOUCH_Y
-        f[int(py):int(py + ph), int(px):int(px + pw)] = f[int(py):int(py + ph), int(px):int(px + pw)] * (1 - a3) + WHITE * a3
-        f[int(py) - 3:int(py), int(px):int(px + pw)] += LIGHT * pulse * a3 * 0.6
-        f[int(py + ph):int(py + ph) + 3, int(px):int(px + pw)] += LIGHT * pulse * a3 * 0.6
-        blit(f, T_TOUCH, W / 2 - T_TOUCH.shape[1] / 2, py + ph / 2 - T_TOUCH.shape[0] / 2, a3)
+    # (the touch prompt is drawn by the kiosk page over the video, not baked in)
     # flash
     fl = 1 - prog(lt, 0.0, 0.5)
     if fl > 0: f += (WHITE * 0.8 + LIGHT * 0.2) * fl ** 2
