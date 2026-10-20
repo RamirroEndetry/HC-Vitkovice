@@ -9,7 +9,7 @@ Webový prototyp pro sdílenou obrazovku ve VIP zóně. Repozitář: https://git
 3. Po potvrzení poděkování; za 12 sekund čistý úvod pro dalšího návštěvníka. Po 90 sekundách nečinnosti se rozpracovaný formulář vymaže.
 4. Vstup „Průběžné pořadí a vítězové“ zobrazí tabulku všech tipů v aktuálním zápase: jméno, tipované skóre, odchylku a sdílené pořadí. Při dostupném aktuálním skóre zvýrazní průběžné lídry, po potvrzení výsledku konečné vítěze a vyzvednutí ceny ve VIP zóně.
 
-Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Tipování se automaticky OTEVŘE v plánovaném začátku zápasu a běží do konce 3. třetiny. Uzavření po 3. třetině potvrzuje obsluha; neodvozuje se z 60 minut běžného času, protože hokej má přestávky a přerušení. Bez potvrzení obsluhy zůstává tipování otevřené i po skutečném konci třetiny. Živý poskytovatel zatím není připojený. Připravené rozhraní po připojení platných dat automaticky uzavře tipy při stavu `regulation_end`; bez dat je nutné ruční uzavření obsluhou. Stav soutěže se kontroluje také při odeslání. Každý návštěvník má samostatný záznam; potvrzení záznam nenahrazuje. Jeden tip na normalizované jméno a zápas na tomto zařízení. Ověření totožnosti ani synchronizace dalších kiosků zatím neexistuje. Staré tipy předchozího osobního prototypu se do kioskové soutěže nepřenášejí.
+Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Tipování se automaticky OTEVŘE 30 minut před plánovaným začátkem zápasu a automaticky se ZAMKNE 10 minut po něm; potom kiosek žádný tip nepřijme (férovost — nikdo netipuje s výhodou rozehraného zápasu). Obsluha nic nepotvrzuje.
 
 ## Ceny a přehled soutěžících
 
@@ -19,9 +19,9 @@ Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Ti
 
 Klikněte na malé ozubené kolečko vpravo dole a zadejte dohodnuté administrátorské heslo. Také `/#obsluha` vyžaduje heslo. Zvolte aktivní utkání pro celou VIP zónu. Volba se ukládá na tomto zařízení a po obnovení stránky zůstane stejné utkání i po jeho začátku nebo skončení; kiosek nepřeskočí na další zápas. Při úplně prvním spuštění se předvybere nejbližší budoucí zápas (pokud žádný není, poslední uvedený); obsluha jej před akcí ověří. Návštěvnické obrazovky nemají výběr zápasu.
 
-Při konci 3. třetiny stiskněte **Konec 3. třetiny — uzavřít tipy**. Uzavření se uloží a již nelze přidávat tipy ani po restartu. Potom zadejte ověřené skóre po 60 minutách a potvrďte vyhodnocení. Před uzavřením tipování nelze výsledek potvrdit. Potvrzený výsledek je v UI uzamčený.
+Tipy se zamknou samy 10 minut po začátku (administrace ukazuje přesné časové okno zápasu). Potom zadejte ověřené skóre po 60 minutách a potvrďte vyhodnocení. Před uzavřením tipování nelze výsledek potvrdit. Potvrzený výsledek je v UI uzamčený.
 
-Vyhrává nejmenší součet absolutních odchylek domácího a hostujícího skóre; přesný tip má odchylku nula. Při shodě rozhoduje správný volitelný tip na počet gólů, pak se vyhlásí všichni společně. Výběr 1/X/2 musí odpovídat zadanému skóre; nepřiděluje samostatné body. Bez tipů není vyhlášen vítěz. Pravidla, rozdělení cen při shodě a postup při odložení musí potvrdit pořadatel.
+Vyhrává nejmenší součet absolutních odchylek domácího a hostujícího skóre; přesný tip má odchylku nula. Při shodě rozhoduje správný volitelný tip na počet gólů a potom dřívější čas odeslání tipu (`savedAt`) — kdo tipuje dřív a stejně přesně, vyhrává sám. Tipy bez časového razítka se řadí za ostatní. Tabulka pořadí i vyhlášení ukazují čas tipu.
 
 ## Dotyková klávesnice obsluhy
 

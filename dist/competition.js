@@ -10,15 +10,16 @@
     if(entry.goals&&entry.goals!==(entry.home+entry.away>=6?'over':'under'))return 'Počet gólů musí odpovídat tvému skóre.';
     return '';
   }
-  // Exact score first; then absolute distance across both scores; then optional goal market.
+  // Exact score first; then absolute distance across both scores; then optional goal market; then the earlier tip.
+  function tipTime(entry){const t=Date.parse(entry.savedAt);return Number.isFinite(t)?t:Infinity}
   function rank(entries,result){
     if(!result||!validScore(result.home)||!validScore(result.away))return [];
     const sorted=entries.filter(e=>!validate(e)).map(e=>({...e,distance:Math.abs(e.home-result.home)+Math.abs(e.away-result.away),bonus:e.goals&&(e.goals===(result.home+result.away>=6?'over':'under'))?1:0}));
-    sorted.sort((a,b)=>a.distance-b.distance||b.bonus-a.bonus);
+    sorted.sort((a,b)=>a.distance-b.distance||b.bonus-a.bonus||tipTime(a)-tipTime(b));
     let previous=null,position=0;
-    return sorted.map((entry,index)=>{if(!previous||entry.distance!==previous.distance||entry.bonus!==previous.bonus)position=index+1;previous=entry;return {...entry,position}});
+    return sorted.map((entry,index)=>{if(!previous||entry.distance!==previous.distance||entry.bonus!==previous.bonus||tipTime(entry)!==tipTime(previous))position=index+1;previous=entry;return {...entry,position}});
   }
   function evaluate(entries,result){return rank(entries,result).filter(entry=>entry.position===1)}
-  const api={validScore,resultOf,validate,rank,evaluate};
+  const api={validScore,resultOf,validate,rank,evaluate,tipTime};
   if(typeof module!=='undefined')module.exports=api;else root.Competition=api;
 })(globalThis);

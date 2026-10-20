@@ -18,6 +18,9 @@ assert.deepEqual(Competition.evaluate([tip('Petr Novák',2,1),tip('Eva Nová',3,
 assert.deepEqual(Competition.evaluate([tip('Petr Novák',3,1),tip('Eva Nová',2,2)],{home:2,away:1}).map(e=>e.name),['Petr Novák','Eva Nová']);
 assert.deepEqual(Competition.evaluate([tip('Petr Novák',3,1),tip('Eva Nová',2,2,'under')],{home:2,away:1}).map(e=>e.name),['Eva Nová']);
 assert.equal(Competition.evaluate([],{home:2,away:1}).length,0);
+// Equal accuracy: the earlier tip wins; tips without a timestamp rank last.
+assert.deepEqual(Competition.evaluate([{...tip('Pozdní Petr',2,1),savedAt:'2026-10-20T17:35:00+02:00'},{...tip('Brzká Eva',2,1),savedAt:'2026-10-20T17:05:00+02:00'}],{home:2,away:1}).map(e=>e.name),['Brzká Eva']);
+assert.deepEqual(Competition.rank([{...tip('Bez času',2,1)},{...tip('S časem',2,1),savedAt:'2026-10-20T17:05:00+02:00'}],{home:2,away:1}).map(e=>e.name+e.position),['S časem1','Bez času2']);
 assert.equal(Competition.evaluate([tip('Eva Nová',2,1)],null).length,0);
 assert.equal(Competition.evaluate([tip('Eva Nová',2,1)],{home:-1,away:1}).length,0);
 const elements=new Map();
@@ -67,10 +70,10 @@ assert.doesNotMatch(el('#main').innerHTML,/id="entry-form"/);
 vm.runInContext('submitEntry()',context);
 assert.equal(JSON.parse(storage.values().next().value).entries.length,0);
 assert.match(el('#toast').textContent,/otevře/);
-// Countdown at the last second, then automatic opening without reloading.
-now='2026-10-20T17:29:59+02:00';vm.runInContext('form(); lastActivity=Date.now()',context);context.tick();
+// Countdown at the last second, then automatic opening (30 minutes before the start) without reloading.
+now='2026-10-20T16:59:59+02:00';vm.runInContext('form(); lastActivity=Date.now()',context);context.tick();
 assert.match(el('#countdown').textContent,/01 s$/);
-now='2026-10-20T17:30:00+02:00';context.tick();
+now='2026-10-20T17:00:00+02:00';context.tick();
 assert.match(el('#main').innerHTML,/id="entry-form"/);
 assert.match(el('#main').innerHTML,/TIPOVÁNÍ OTEVŘENO/);
 vm.runInContext('outcome="1"',context);
@@ -82,14 +85,15 @@ vm.runInContext('adminAuthenticated=true;staff()',context);assert.match(el('#mai
 context.document.querySelectorAll=sel=>sel.startsWith('#prize-rows .prize-row')?[{querySelector:n=>({value:n==='[name=title]'?'  Zlatý  puk ':'VIP večeře'})},{querySelector:n=>({value:''})}]:[];
 vm.runInContext('savePrizes()',context);assert.deepEqual(JSON.parse(storage.values().next().value).prizes.lib,[{title:'Zlatý puk',detail:'VIP večeře'}]);context.document.querySelectorAll=()=>[];
 vm.runInContext('welcome()',context);assert.match(el('#main').innerHTML,/Zlatý puk/);assert.doesNotMatch(el('#main').innerHTML,/Podepsaný dres/);vm.runInContext('adminAuthenticated=false;form();outcome="1"',context);
-// A different visitor can submit during the game; a score cannot be confirmed yet.
-now='2026-10-20T19:30:00+02:00';el('#guest-name').value='Jiný člověk';vm.runInContext('submitEntry()',context);assert.equal(JSON.parse(storage.values().next().value).entries.length,2);
+// A different visitor can still submit in the 10th minute; a score cannot be confirmed yet.
+now='2026-10-20T17:39:00+02:00';el('#guest-name').value='Jiný člověk';vm.runInContext('submitEntry()',context);assert.equal(JSON.parse(storage.values().next().value).entries.length,2);
 el('#result-home').value='2';el('#result-away').value='1';el('#result-confirm').checked=true;vm.runInContext('submitResult()',context);assert.equal(JSON.parse(storage.values().next().value).results.lib,undefined);
 const clickAction=action=>el('#main').click({target:{closest:selector=>selector==='[data-action]'?{dataset:{action}}:null}});
-vm.runInContext('adminLogin()',context);el('#admin-password').value='Digi2026';vm.runInContext('unlockAdmin()',context);assert.match(el('#main').innerHTML,/id="match"/);clickAction('close-tipping');
-assert.ok(JSON.parse(storage.values().next().value).closedMatches.lib);
+// Ten minutes after the start the kiosk locks itself: no late tips, result entry opens, the earlier exact tip wins alone.
+now='2026-10-20T17:40:00+02:00';context.tick();assert.match(el('#main').innerHTML,/TIPY UZAVŘENY|uzamčen/);
+vm.runInContext('adminLogin()',context);el('#admin-password').value='Digi2026';vm.runInContext('unlockAdmin()',context);assert.match(el('#main').innerHTML,/id="match"/);assert.doesNotMatch(el('#main').innerHTML,/close-tipping/);
 vm.runInContext('form();outcome="1"',context);el('#guest-name').value='Pozdní návštěvník';vm.runInContext('submitEntry()',context);assert.equal(JSON.parse(storage.values().next().value).entries.length,2);
-vm.runInContext('submitResult()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězům/);assert.match(el('#main').innerHTML,/Cenu si vyzvedněte ve VIP zóně/);
+vm.runInContext('submitResult()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězi!/);assert.match(el('#main').innerHTML,/&lt;b&gt;Eva&lt;\/b&gt;/);assert.doesNotMatch(el('#main').innerHTML,/Jiný člověk/);assert.match(el('#main').innerHTML,/Cenu si vyzvedněte ve VIP zóně/);
 assert.doesNotMatch(el('#main').innerHTML,/id="match"/);
 // Active game remains pinned when loading later; it never jumps to the next fixture.
 const reloaded={...context,setInterval(){},document:{...context.document,querySelector:()=>({innerHTML:'',addEventListener(){}})}};vm.createContext(reloaded);vm.runInContext(fs.readFileSync('dist/data.js','utf8'),reloaded);vm.runInContext(fs.readFileSync('dist/club-ui.js','utf8'),reloaded);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),reloaded);assert.equal(vm.runInContext('currentId',reloaded),'lib');assert.equal(vm.runInContext('open(current())',reloaded),false);assert.equal(vm.runInContext('adminAuthenticated',reloaded),false);
@@ -118,4 +122,4 @@ const generalPartner=ClubContent.partners.find(p=>p.category==='Generální part
 const partnerIndex=vm.runInContext('partnerPage',context);el('#partners-pause').onclick();assert.equal(vm.runInContext('partnerPaused',context),true);vm.runInContext('partnerLastChange=Date.now()-9000;tickPartners()',context);assert.equal(vm.runInContext('partnerPage',context),partnerIndex);el('#partners-pause').onclick();assert.equal(vm.runInContext('partnerPaused',context),false);
 assert.equal(vm.runInContext('partnerGroups().flat().length',context),ClubContent.partners.length-ClubContent.partners.filter(p=>p.category==='Generální partner').length);
 
-console.log('PASS: exact/nearest winners, ties, validation, single-match visitor screens, countdown, automatic opening, in-game submissions, staff closure, late-tip rejection, result gating, pinned match on reload, persistence failure. Password gating, isolated admin practice tips, logout/reload/idle lock verified. Club profiles/assets, partner rotation/pause and five-minute/touch-dismiss trophy verified. Visual browser QA not performed.');
+console.log('PASS: exact/nearest winners, ties, validation, single-match visitor screens, countdown, automatic opening 30 min before start, submissions until the 10th minute, automatic lock, late-tip rejection, earlier-tip tie-break, result gating, pinned match on reload, persistence failure. Password gating, isolated admin practice tips, logout/reload/idle lock verified. Club profiles/assets, partner rotation/pause and five-minute/touch-dismiss trophy verified. Visual browser QA not performed.');
