@@ -5,7 +5,7 @@ Webový prototyp pro sdílenou obrazovku ve VIP zóně. Repozitář: https://git
 ## Návštěvník
 
 1. Úvodní spořič „Dotkni se obrazovky“.
-2. Jedna karta konkrétního zápasu s týmy, termínem a odpočtem do otevření tipování. Návštěvník utkání nevybírá; zadá jméno, výsledek 1/X/2, povinné přesné skóre a volitelně počet gólů (0–5 / 6 a více).
+2. Jedna karta konkrétního zápasu s týmy, termínem a odpočtem do otevření tipování. Návštěvník utkání nevybírá; zadá jméno, výsledek 1/X/2, povinné přesné skóre a jako volitelný 4. tip „Ano, prodloužení nebo nájezdy“ (jedna sloučená volba). S tímto tipem zadává konečné skóre o jeden gól (např. 3:2), které se pro 60 minut počítá jako remíza (2:2).
 3. Po potvrzení poděkování; za 12 sekund čistý úvod pro dalšího návštěvníka. Po 90 sekundách nečinnosti se rozpracovaný formulář vymaže.
 4. Vstup „Průběžné pořadí a vítězové“ zobrazí tabulku všech tipů v aktuálním zápase: jméno, tipované skóre, odchylku a sdílené pořadí. Při dostupném aktuálním skóre zvýrazní průběžné lídry, po potvrzení výsledku konečné vítěze a vyzvednutí ceny ve VIP zóně.
 
@@ -19,9 +19,9 @@ Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Ti
 
 Klikněte na malé ozubené kolečko vpravo dole a zadejte dohodnuté administrátorské heslo. Také `/#obsluha` vyžaduje heslo. Zvolte aktivní utkání pro celou VIP zónu. Volba se ukládá na tomto zařízení a po obnovení stránky zůstane stejné utkání i po jeho začátku nebo skončení; kiosek nepřeskočí na další zápas. Při úplně prvním spuštění se předvybere nejbližší budoucí zápas (pokud žádný není, poslední uvedený); obsluha jej před akcí ověří. Návštěvnické obrazovky nemají výběr zápasu.
 
-Tipy se zamknou samy 10 minut po začátku (administrace ukazuje přesné časové okno zápasu). Potom zadejte ověřené skóre po 60 minutách a potvrďte vyhodnocení. Před uzavřením tipování nelze výsledek potvrdit. Potvrzený výsledek je v UI uzamčený.
+Tipy se zamknou samy 10 minut po začátku (administrace ukazuje přesné časové okno zápasu). Výsledek po 60 minutách se po oficiálním konci zápasu zapíše sám z hokej.cz (viz Živé skóre z hokej.cz). Při výpadku zdroje jej obsluha zadá ručně; před uzavřením tipování to nejde. Potvrzený výsledek je v UI uzamčený.
 
-Vyhrává nejmenší součet absolutních odchylek domácího a hostujícího skóre; přesný tip má odchylku nula. Při shodě rozhoduje správný volitelný tip na počet gólů a potom dřívější čas odeslání tipu (`savedAt`) — kdo tipuje dřív a stejně přesně, vyhrává sám. Tipy bez časového razítka se řadí za ostatní. Tabulka pořadí i vyhlášení ukazují čas tipu.
+Vyhrává nejmenší součet absolutních odchylek od skóre **po 60 minutách**; přesný tip má odchylku nula. Tip s prodloužením / nájezdy (`decision: "extra"`, skóre o jeden gól; starší tipy mohou mít `overtime` / `shootout` a počítají se stejně) se porovnává jako remíza o gól nižší (`Competition.regulationOf`: 3:2 → 2:2). Při shodě rozhoduje 1) menší odchylka od konečného skóre včetně prodloužení a nájezdů (`total`, tedy kdo trefil vítěze), 2) dřívější čas. Jestli zápas rozhodlo prodloužení, nebo až nájezdy, na pořadí nemá vliv. Příklad 2:2 po 60 minutách, Vítkovice vyhrály 3:2 v nájezdech: 3:2 s prodloužením/nájezdy > 2:2 > 2:3 s prodloužením/nájezdy > 3:2 v základní době. Když zápas skončí 3:2 v základní době, vyhraje naopak tip 3:2 bez prodloužení. Poté rozhoduje dřívější čas odeslání tipu (`savedAt`) — kdo tipuje dřív a stejně přesně, vyhrává sám. Tipy bez časového razítka se řadí za ostatní. Dřívější tip na počet gólů (0–5 / 6 a více) formulář už nenabízí; u starších uložených tipů se při shodě započítá až po tipu na prodloužení / nájezdy. Tabulka pořadí i vyhlášení ukazují čas tipu.
 
 ## Dotyková klávesnice
 
@@ -35,7 +35,7 @@ Volba **Zpět do administrace** umožní pokračovat v práci. Návrat na úvod,
 
 ## Omezení prototypu
 
-Data jsou pouze v localStorage tohoto prohlížeče; při vymazání úložiště se ztratí. Administrace má pouze místní heslovou bránu v JavaScriptu. Heslo lze zjistit ze zdrojového kódu; nejde o serverové zabezpečení a není vhodné k ostré soutěži. Jména nejsou ověřená. Před sběrem skutečných návštěvníků je potřeba serverová databáze, přihlášení obsluhy, serverové uzávěrky a pravidla zpracování a uchování jmen. Výsledky zadává obsluha ručně, Tipsport není připojen. Rozpis je statický, ověřený 19. 10. 2026; termíny se nesynchronizují. Nejde o nasazenou produkční soutěž.
+Data jsou pouze v localStorage tohoto prohlížeče; při vymazání úložiště se ztratí. Administrace má pouze místní heslovou bránu v JavaScriptu. Heslo lze zjistit ze zdrojového kódu; nejde o serverové zabezpečení a není vhodné k ostré soutěži. Jména nejsou ověřená. Před sběrem skutečných návštěvníků je potřeba serverová databáze, přihlášení obsluhy, serverové uzávěrky a pravidla zpracování a uchování jmen. Výsledky se načítají z veřejného výsledkového zdroje hokej.cz bez smlouvy; při změně jeho formátu je potřeba upravit adaptér. Rozpis je statický, ověřený 19. 10. 2026; termíny se nesynchronizují. Nejde o nasazenou produkční soutěž.
 
 Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotografiemi, kariérní údaje tam, kde je klub zveřejňuje, sezónní statistiky a partnerská loga. Starý ukázkový výběr v `dist/data.js` se v galerii nepoužívá.
 
@@ -47,11 +47,11 @@ Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotog
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` při každém pushi do `main` publikuje složku `dist` (a do `index.html` vepíše verzi commitu místo `__V__`, aby kiosky nedržely staré skripty a styly v cache) na https://ramirroendetry.github.io/HC-Vitkovice/. Jde o statický web: živé skóre (`/api/live`) běží jen přes Cloudflare worker, na Pages kiosek funguje bez něj. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
+Workflow `.github/workflows/pages.yml` při každém pushi do `main` publikuje složku `dist` (a do `index.html` vepíše verzi commitu místo `__V__`, aby kiosky nedržely staré skripty a styly v cache) na https://ramirroendetry.github.io/HC-Vitkovice/. Jde o statický web; živé skóre si kiosek stahuje přímo z hokej.cz, takže na Pages funguje celé. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
 
 ## Cloudflare
 
-`wrangler.jsonc` připravuje Worker s obsluhou `/api/live` a statickými soubory. Samotný statický HTTP server obslouží UI a demo, ale živé API běží až přes Wrangler nebo nasazený Worker. V Cloudflare připojte GitHub repozitář přes Workers Builds, se sestavovacím příkazem `npm run build` a příkazem nasazení `npx wrangler deploy`. Alternativně po `npx wrangler login` spusťte `npm run deploy`. Samotná konfigurace neprovádí nasazení ani nezajišťuje VIP přístup.
+`wrangler.jsonc` připravuje Worker s obsluhou `/api/live` a statickými soubory. Kiosek ho pro živé skóre nepotřebuje. V Cloudflare připojte GitHub repozitář přes Workers Builds, se sestavovacím příkazem `npm run build` a příkazem nasazení `npx wrangler deploy`. Alternativně po `npx wrangler login` spusťte `npm run deploy`. Samotná konfigurace neprovádí nasazení ani nezajišťuje VIP přístup.
 
 Zdroje loga, rozpisu a hráčů: https://www.hc-vitkovice.cz/ a https://www.hc-vitkovice.cz/soupiska/MUZ
 
@@ -62,33 +62,26 @@ Po odemknutí administrace zvolte **Spustit demo zápasu**. Demo založí přesn
 
 Ovládání: **Pozastavit / Pokračovat**, **Další událost**, **Spustit znovu**, návrat do administrace nebo zamknutí. Demo nepřidává tipy do localStorage, nemění skutečný výsledek a neuzavírá skutečný zápas. Opuštěním administrace nebo obnovením stránky zanikne.
 
-## Připojení živého skóre – připravené rozhraní, bez poskytovatele
+## Živé skóre z hokej.cz
 
-Klient každých 15 sekund po začátku utkání požaduje `GET /api/live?matchId=lib` (analogicky `kom`, `tri`). Bez zdroje vrací Worker HTTP 503 s kódem `LIVE_FEED_NOT_CONFIGURED`; UI neukazuje vymyšlené skóre ani lídra. Dotazy neběží během demoverze a po potvrzení konečného výsledku. Výpadek nebo data starší 90 sekund zruší průběžné pořadí; jména a tipy zůstanou vidět. Starší odpověď nepřepíše novější skóre. Potvrzené konečné výsledky nejsou omezené dobou platnosti živých dat.
+Kiosek po začátku utkání každých 15 s (časový limit 8 s) stahuje přímo z prohlížeče oficiální výsledkový JSON, ze kterého čte i hokej.cz: `https://json.esports.cz/hokejcz/scoreboard/onlajny/RRRR-MM-DD.json`. Zdroj je veřejný, bez klíče a s povoleným CORS, takže funguje i na GitHub Pages bez Workeru. Během zápasu ho hokej.cz obnovuje po 5 s. Utkání se dohledá podle data z `dist/data.js` a zkratek týmů (`VIT` + `short` soupeře z `dist/teams.js`); když hrají Vítkovice venku, skóre se otočí, aby vždy byly první.
 
-Až bude dostupný poskytovatel a jeho dokumentace, je potřeba implementovat adaptér a mapování ID utkání. Proměnná prostředí `LIVE_FEED_URL` určuje HTTPS adresu normalizovaného feedu; Worker přidává parametr `matchId`. Volitelný `LIVE_FEED_TOKEN` patří do Cloudflare Secrets, posílá se pouze poskytovateli hlavičkou Bearer a nesmí být v klientském JavaScriptu ani v repozitáři. Žádné skutečné přístupové údaje nejsou nastavené a žádné přímé Tipsport API nyní není integrováno.
+Skóre pro soutěž je **součet tří třetin** (`score_period`), nikdy celkové skóre, takže góly v prodloužení a nájezdy se nezapočítají (např. VIT–LIB 20. 10. 2026: oficiálně 3:2 po nájezdech, pro soutěž 2:2). Stav se mapuje na fáze `scheduled`, `period1–3`, `break1–2` a `regulation_end`; místo zbývajícího času se ukazuje odehraná minuta (např. 47'). Adaptér je `LiveMatch.fromScoreboard` v `dist/live.js`.
 
-Normalizovaná JSON odpověď adaptéru:
+- Konec 3. třetiny (i prodloužení) tipování uzavře.
+- Jakmile hokej.cz označí zápas jako **„po zápase“**, výsledek po 60 minutách se **zapíše automaticky** (`results[matchId].source = "hokej.cz"`) a na úvodní obrazovce nebo výsledkové tabulce se hned spustí vyhlášení s pohárem; spořič se přitom sám zavře. Obsluha nic nepotvrzuje.
+- Zapíše se i způsob rozhodnutí (`decision`: `regulation` / `overtime` / `shootout` podle stavu K / KP / KN) a konečné skóre (`total`). Kiosek pak ukazuje např. „2 : 2 po 60 minutách · rozhodly nájezdy, konečné skóre 3 : 2“.
+- Ruční zadání výsledku v administraci zůstává jen jako záloha při výpadku zdroje; při remíze po 60 minutách musí obsluha vybrat, kdo vyhrál prodloužení nebo nájezdy (z toho se dopočítá konečné skóre).
+- Výpadek zdroje zruší průběžné pořadí (jména a tipy zůstanou vidět) a při dalším úspěšném dotazu se vše obnoví. Dotazy neběží v demoverzi a po zapsání výsledku.
+- Zrušený nebo odložený zápas se ohlásí jako chyba, výsledek se nezapíše.
 
-```json
-{
-  "matchId": "lib",
-  "home": 2,
-  "away": 1,
-  "phase": "period3",
-  "clock": "08:41",
-  "updatedAt": "2026-10-20T17:20:00Z"
-}
-```
+Volitelně `worker.mjs` nabízí totéž na serveru: `GET /api/live?matchId=lib&date=2026-10-20&opponent=LIB` vrací normalizovaný snapshot (`matchId, home, away, phase, clock, updatedAt, final`). Kiosek ho nepotřebuje.
 
-`updatedAt` musí být aktuální čas posledního ověření zdroje (nikoli pouze čas posledního gólu). `clock` je čas zbývající ve třetině. Povolené fáze: `scheduled`, `period1`, `break1`, `period2`, `break2`, `period3`, `regulation_end`. Skóre musí být výhradně za základní hrací dobu; prodloužení a nájezdy do této soutěže nepatří. Po přijetí `regulation_end` se tipy uzavřou, ale konečné vítěze stále potvrzuje obsluha přes výsledkový formulář. To brání záměně průběžného lídra za definitivního vítěze.
-
-Kontroly: `npm run check` ověřuje ranking, celou demoverzi, oddělení dat, chybějící/opožděný feed a serverové rozhraní pomocí simulovaných odpovědí. Skutečné napojení na poskytovatele ani vizuální kontrola v prohlížeči nebyly provedeny.
-
+`npm run check` ověřuje adaptér na skutečném záznamu zápasu VIT–LIB a na simulovaných živých stavech (třetiny, přestávky, prodloužení, zápas venku, zrušení), automatické vyhlášení i výpadek zdroje. Proti skutečnému zdroji je ověřené načtení odehraného zápasu v prohlížeči; průběh živého zápasu (přesné názvy stavů během hry) se ověří až při nejbližším utkání.
 
 ## Panel na výšku
 
-Na displeji na výšku (od 900 px šířky a 1400 px výšky, typicky 1080×1920) se zapne samostatné rozvržení ve stylu intro videa. Úvod se vejde na celou obrazovku bez posouvání, dotykové prvky jsou velké a za logem jsou reflektory a paprsky. Pravidla jsou v bloku `@media (orientation:portrait)` na konci `dist/style.css`. Rozvržení na šířku a pro mobily zůstává beze změny.
+Na displeji na výšku (od 900 px šířky a 1400 px výšky, typicky 1080×1920) se zapne samostatné rozvržení ve stylu intro videa. Úvod se vejde na celou obrazovku bez posouvání, dotykové prvky jsou velké a za logem jsou reflektory a paprsky. Pravidla jsou v bloku `@media (orientation:portrait)` na konci `dist/style.css`. Rozvržení na šířku a pro mobily zůstává beze změny. Kiosek nikde neukazuje posuvníky (posouvání dotykem funguje dál), aby se na panelu neobjevila postranní lišta.
 
 ## Spořič obrazovky s intro videem
 
@@ -119,17 +112,6 @@ Na telefonech se spořič nespouští (není to kiosek a mobilní prohlížeče 
 - Kiosek nejdříve používá místní kopii, při selhání zkusí známou vzdálenou adresu a pak zobrazí zkratku klubu. Běžné zobrazování proto nevyžaduje opakované stahování od klubového webu.
 
 Při přidání nového účastníka extraligy se rozšíří registr týmů; změna loga stávajícího klubu se promítne při další synchronizaci.
-
-## Ověřené možnosti živých výsledků
-
-Živá data existují; dosud chybí konkrétní přístup aplikace k poskytovateli, nikoli technická možnost integrace.
-
-- Sportradar výslovně uvádí Czech Extraliga v Global Ice Hockey API: https://developer.sportradar.com/ice-hockey/reference/global-ice-hockey-overview
-- Goalserve uvádí českou extraligu v seznamu pokrytí včetně livescores: https://www.goalserve.com/frort-data-feeds/sport-data-feeds/ice-hockey-api/coverage a nabízí žádost o trial: https://www.goalserve.com/ruores/contact-us
-- API-Sports Hockey nabízí testovací tarif 100 požadavků denně: https://api-sports.io/sports/hockey a dokumentuje aktualizace zápasů po 15 sekundách: https://api-sports.io/documentation/hockey/v1 . Pokrytí konkrétní extraligové sezóny a přístup zvoleného tarifu je potřeba ověřit přes účet/API; samotná dokumentace země Czech-Republic to negarantuje.
-
-Pro dvaapůlhodinový zápas při aktualizaci po 15 sekundách vychází přibližně 600 požadavků na jeden sdílený zdroj. Tarif 100 požadavků denně tedy poslouží na ověření, nikoli na celou takto častou aktualizaci zápasu. Do aplikace nebyl bez klíče aktivován žádný z těchto poskytovatelů.
-
 
 ## Klubové úspěchy, hráčské profily a partneři
 

@@ -77,7 +77,7 @@ now='2026-10-20T17:00:00+02:00';context.tick();
 assert.match(el('#main').innerHTML,/id="entry-form"/);
 assert.match(el('#main').innerHTML,/TIPOVÁNÍ OTEVŘENO/);
 vm.runInContext('outcome="1"',context);
-el('#guest-name').value='<b>Eva</b>';el('#home-score').value='2';el('#away-score').value='1';el('#goals').value='under';
+el('#guest-name').value='<b>Eva</b>';el('#home-score').value='2';el('#away-score').value='1';el('#decision').value='shootout';
 vm.runInContext('submitEntry()',context);assert.match(el('#main').innerHTML,/&lt;b&gt;Eva&lt;\/b&gt;/);assert.equal(JSON.parse(storage.values().next().value).entries.length,1);
 vm.runInContext('form(); outcome="1"',context);vm.runInContext('submitEntry()',context);assert.match(el('#toast').textContent,/už je/);
 vm.runInContext('welcome()',context);assert.match(el('#main').innerHTML,/&lt;b&gt;Eva&lt;\/b&gt;/);assert.doesNotMatch(el('#main').innerHTML,/Zatím nikdo nehrál/);
@@ -111,7 +111,7 @@ for(const fn of ['welcome','form','resultScreen','staff','rules'])vm.runInContex
 // Missing or old live data must not invent a leader; only confirmed results are final.
 vm.runInContext('home(); resultScreen()',context);assert.match(el('#main').innerHTML,/ČEKÁME NA AKTUÁLNÍ DATA/);assert.doesNotMatch(el('#main').innerHTML,/leading-row/);
 const snapshot={matchId:'kom',home:1,away:1,phase:'period2',clock:'10:00',updatedAt:new Date(now).toISOString()};
-assert.deepEqual(LiveMatch.validateSnapshot(snapshot,'kom',new Date(now).getTime()),snapshot);
+assert.deepEqual(LiveMatch.validateSnapshot(snapshot,'kom',new Date(now).getTime()),{...snapshot,final:false,decision:null,total:null});
 assert.throws(()=>LiveMatch.validateSnapshot(snapshot,'lib',new Date(now).getTime()));
 assert.throws(()=>LiveMatch.validateSnapshot({...snapshot,phase:'overtime'},'kom',new Date(now).getTime()));
 assert.throws(()=>LiveMatch.validateSnapshot({...snapshot,updatedAt:'2020-01-01T00:00:00Z'},'kom',new Date(now).getTime()));

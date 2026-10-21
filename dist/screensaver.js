@@ -30,7 +30,8 @@
   for(const type of ['pointerdown','keydown','input'])document.addEventListener(type,()=>{if(saver.hidden)idleSince=Date.now()},true);
   document.addEventListener('keydown',()=>hide());
   addEventListener('resize',()=>{if(!saver.hidden)pickSource()});
-  setInterval(()=>{if(saver.hidden&&onWelcome()&&Date.now()-idleSince>IDLE_MS)show()},1000);
+  // Leave the stage to anything that replaces the welcome screen on its own (e.g. the automatic winner announcement).
+  setInterval(()=>{if(!saver.hidden&&!onWelcome())hide();else if(saver.hidden&&onWelcome()&&Date.now()-idleSince>IDLE_MS)show()},1000);
   pickSource();
   if(onWelcome()&&!location.hash)show();
 })();

@@ -425,3 +425,11 @@ body.keyboard-docked .kiosk .admin-access{display:none}
   body.keyboard-docked .kiosk main{padding-bottom:760px}
   .keyboard-toggle{font-size:20px;padding:14px 22px}
 }
+
+/* Touch kiosk: no visible scrollbars (touch scrolling still works), no sideways page drift. */
+html,body.kiosk{scrollbar-width:none;-ms-overflow-style:none;overflow-x:hidden}
+body.kiosk *{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body.kiosk::-webkit-scrollbar,body.kiosk *::-webkit-scrollbar{display:none;width:0;height:0}
+
+/* Optional overtime/shootout tip: only usable after the visitor picks a draw. */
+.decision-field select:disabled{opacity:.45;cursor:not-allowed}
