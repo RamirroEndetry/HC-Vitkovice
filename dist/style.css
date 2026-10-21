@@ -438,3 +438,10 @@ html::-webkit-scrollbar,body.kiosk::-webkit-scrollbar,body.kiosk *::-webkit-scro
 .backup-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:6px 0 4px}
 .backup-restore{position:relative;cursor:pointer}
 .backup-restore input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+
+/* Staff: manual opening and the tip list with delete buttons. */
+.tips-admin-list{list-style:none;margin:8px 0 14px;padding:0;display:grid;gap:8px;max-height:420px;overflow:auto}
+.tips-admin-list li{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 14px;background:#fff;border:1px solid #dbe7f6;border-radius:8px}
+.tips-admin-list strong{display:block}
+.tips-admin-list small{color:#5b6b80}
+.tip-delete,.tip-delete-all{color:#b3261e;border-color:#f1c6c2}

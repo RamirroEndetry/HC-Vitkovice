@@ -23,6 +23,15 @@ Tipy se zamknou samy 10 minut po začátku (administrace ukazuje přesné časov
 
 Vyhrává nejmenší součet absolutních odchylek od skóre **po 60 minutách**; přesný tip má odchylku nula. Tip s prodloužením / nájezdy (`decision: "extra"`, skóre o jeden gól; starší tipy mohou mít `overtime` / `shootout` a počítají se stejně) se porovnává jako remíza o gól nižší (`Competition.regulationOf`: 3:2 → 2:2). Při shodě rozhoduje 1) menší odchylka od konečného skóre včetně prodloužení a nájezdů (`total`, tedy kdo trefil vítěze), 2) dřívější čas. Jestli zápas rozhodlo prodloužení, nebo až nájezdy, na pořadí nemá vliv. Příklad 2:2 po 60 minutách, Vítkovice vyhrály 3:2 v nájezdech: 3:2 s prodloužením/nájezdy > 2:2 > 2:3 s prodloužením/nájezdy > 3:2 v základní době. Když zápas skončí 3:2 v základní době, vyhraje naopak tip 3:2 bez prodloužení. Poté rozhoduje dřívější čas odeslání tipu (`savedAt`) — kdo tipuje dřív a stejně přesně, vyhrává sám. Tipy bez časového razítka se řadí za ostatní. Dřívější tip na počet gólů (0–5 / 6 a více) formulář už nenabízí; u starších uložených tipů se při shodě započítá až po tipu na prodloužení / nájezdy. Tabulka pořadí i vyhlášení ukazují čas tipu.
 
+## Ruční otevření tipování a mazání tipů
+
+V administraci jsou pro aktuálně vybraný zápas dva bloky:
+
+- **Ruční otevření tipování** – tlačítko **Otevřít tipování ručně** zpřístupní tipování ještě před běžným oknem (30 minut před začátkem), např. pro ostrou zkoušku na kiosku. Tipy se ukládají do soutěže jako skutečné a návštěvníci vidí „TIPOVÁNÍ OTEVŘENO OBSLUHOU“. Zamčení 10 minut po začátku zápasu platí vždy. **Zrušit ruční otevření** vrací běžné časové okno. Ukládá se do `state.manualOpen[matchId]`.
+- **Tipy tohoto zápasu** – seznam všech tipů (jméno, tip, čas) s tlačítkem **Smazat** u každého a **Smazat všechny tipy tohoto zápasu**. Každé smazání se potvrzuje; vrátit jde jen obnovou ze zálohy. Tipy ostatních zápasů zůstávají. Po výsledku smazání změní pořadí i vítěze (administrace na to upozorní).
+
+Pro zkoušení bez zápisu do soutěže dál slouží **Spustit zkušební tipování** (tipy se neukládají).
+
 ## Záloha tipů a výsledků
 
 Tipy, výsledky, ceny a vybraný zápas se ukládají jen do localStorage prohlížeče (klíč `vitkovice-vip-kiosk-v1`). Přežijí restart prohlížeče i PC a výpadek internetu, ne však vymazání dat prohlížeče, anonymní okno nebo změnu prohlížeče či adresy. Proto má administrace blok **Záloha tipů a výsledků**:

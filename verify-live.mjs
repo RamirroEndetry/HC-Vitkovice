@@ -105,4 +105,18 @@ assert.throws(()=>vm.runInContext("mergeBackup('není json')",context),/platná 
 assert.throws(()=>vm.runInContext("mergeBackup('{\"a\":1}')",context),/záloha VIP kiosku/);
 vm.runInContext("persist({...state,entries:[...state.entries,{id:'x',matchId:'kom',name:'=SUM(A1)',home:1,away:0,outcome:'1',goals:'',savedAt:new Date().toISOString()}]})",context);
 assert.match(vm.runInContext('backupCsv()',context),/;'=SUM\(A1\);/,'no spreadsheet formulas from visitor names');
-console.log('PASS: hokej.cz adapter (regulation score from periods, phases, breaks, overtime, away orientation, cancelled), worker mirror, live ranking, outage handling, closure at end of regulation, automatic official result and winner announcement; optional overtime/shootout tip (final score one goal apart = draw after 60 minutes, one merged option, ranked by the final score), decision read from the source; morning switch to the next match (not before 6:00, not during staff work, staff pin respected); backup JSON/CSV export and non-destructive restore.');
+// Staff: open tipping by hand for the upcoming match and delete tips again.
+context.confirm=()=>true;
+vm.runInContext("persist({...state,activeMatchId:'kom',manualOpen:{}});currentId='kom';adminAuthenticated=true",context);
+now=Date.parse('2026-10-22T12:00:00+02:00');
+assert.equal(vm.runInContext("open(current())",context),false,'regular window not open yet');
+vm.runInContext('toggleManualOpen()',context);assert.equal(vm.runInContext("open(current())",context),true);assert.ok(saved().manualOpen.kom);
+vm.runInContext("persist({...state,entries:[...state.entries,{id:'t1',matchId:'kom',name:'Test Jedna',home:2,away:1,outcome:'1',goals:'',savedAt:new Date().toISOString()},{id:'t2',matchId:'kom',name:'Test Dva',home:3,away:2,decision:'extra',outcome:'1',goals:'',savedAt:new Date().toISOString()},{id:'t3',matchId:'lib',name:'Jiný zápas',home:1,away:1,outcome:'X',goals:'',savedAt:new Date().toISOString()}]})",context);
+assert.match(vm.runInContext("tipsAdmin(current())",context),/Tipy tohoto zápasu \(\d+\)/);
+const komTips=()=>saved().entries.filter(e=>e.matchId==='kom').map(e=>e.id);
+vm.runInContext("deleteTips('t1')",context);assert.ok(!komTips().includes('t1'));assert.ok(komTips().includes('t2'));
+vm.runInContext('deleteTips(null)',context);assert.deepEqual(komTips(),[]);assert.ok(saved().entries.some(e=>e.id==='t3'),'other matches keep their tips');
+vm.runInContext('adminAuthenticated=false',context);vm.runInContext("deleteTips('t3')",context);assert.ok(saved().entries.some(e=>e.id==='t3'),'only staff can delete');
+vm.runInContext('adminAuthenticated=true;toggleManualOpen()',context);assert.equal(vm.runInContext("open(current())",context),false,'manual opening can be withdrawn');
+vm.runInContext('toggleManualOpen()',context);now=Date.parse('2026-10-23T17:41:00+02:00');assert.equal(vm.runInContext("open(current())",context),false,'the lock 10 minutes after the start always applies');
+console.log('PASS: hokej.cz adapter (regulation score from periods, phases, breaks, overtime, away orientation, cancelled), worker mirror, live ranking, outage handling, closure at end of regulation, automatic official result and winner announcement; optional overtime/shootout tip (final score one goal apart = draw after 60 minutes, one merged option, ranked by the final score), decision read from the source; morning switch to the next match (not before 6:00, not during staff work, staff pin respected); backup JSON/CSV export and non-destructive restore; manual opening by staff (lock still applies) and staff-only tip deletion.');
