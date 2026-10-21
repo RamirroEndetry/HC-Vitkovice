@@ -79,4 +79,16 @@ now+=16000;state={...state,score_home:'4',score_visitor:'2',match_last_time:"65'
 assert.deepEqual([saved().results.lib.home,saved().results.lib.away,saved().results.lib.source,saved().results.lib.decision,saved().results.lib.total],[3,2,'hokej.cz','overtime',{home:4,away:2}],'regulation score is written automatically');
 assert.equal(vm.runInContext('screen',context),'celebration');
 const polled=vm.runInContext('lastLivePoll',context);now+=16000;await vm.runInContext('pollLive()',context);assert.equal(vm.runInContext('lastLivePoll',context),polled,'polling stops after the result');
-console.log('PASS: hokej.cz adapter (regulation score from periods, phases, breaks, overtime, away orientation, cancelled), worker mirror, live ranking, outage handling, closure at end of regulation, automatic official result and winner announcement; optional overtime/shootout tip (final score one goal apart = draw after 60 minutes, one merged option, ranked by the final score), decision read from the source.');
+// Morning switch to the next match after the official result.
+vm.runInContext('home()',context);assert.equal(vm.runInContext('autoAdvanceMatch()',context),false,'the result stays on screen the evening after the match');
+now=Date.parse('2026-10-21T05:59:00+02:00');assert.equal(vm.runInContext('autoAdvanceMatch()',context),false);
+now=Date.parse('2026-10-21T06:00:00+02:00');assert.equal(vm.runInContext('adminAuthenticated=true;autoAdvanceMatch()',context),false,'never while staff work');
+vm.runInContext('adminAuthenticated=false',context);assert.equal(vm.runInContext('autoAdvanceMatch()',context),true);
+assert.equal(saved().activeMatchId,'kom');assert.equal(vm.runInContext('currentId',context),'kom');assert.equal(vm.runInContext('screen',context),'welcome');
+// A finished match that staff pin by hand after the switch time stays on the kiosk.
+vm.runInContext("persist({...state,activeMatchId:'lib',activeMatchSetAt:new Date().toISOString()});currentId='lib';home()",context);now+=3600000;
+assert.equal(vm.runInContext('autoAdvanceMatch()',context),false);assert.equal(saved().activeMatchId,'lib');
+// A result recorded late (e.g. the next morning) still gets its five-minute announcement first.
+vm.runInContext("persist({...state,activeMatchSetAt:null,results:{...state.results,lib:{...state.results.lib,confirmedAt:new Date().toISOString()}}})",context);
+assert.equal(vm.runInContext('autoAdvanceMatch()',context),false);now+=5*60*1000;assert.equal(vm.runInContext('autoAdvanceMatch()',context),true);
+console.log('PASS: hokej.cz adapter (regulation score from periods, phases, breaks, overtime, away orientation, cancelled), worker mirror, live ranking, outage handling, closure at end of regulation, automatic official result and winner announcement; optional overtime/shootout tip (final score one goal apart = draw after 60 minutes, one merged option, ranked by the final score), decision read from the source; morning switch to the next match (not before 6:00, not during staff work, staff pin respected).');

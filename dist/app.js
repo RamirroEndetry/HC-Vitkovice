@@ -41,7 +41,7 @@ const entries=id=>state.entries.filter(e=>e.matchId===id);
 function persist(next){try{localStorage.setItem(key,JSON.stringify(next));state=next;return true}catch{message('Uložení se nezdařilo. Požádej obsluhu o pomoc.');return false}}
 function message(text){$('#toast').textContent=text;$('#toast').style.display='block';clearTimeout(timer);timer=setTimeout(()=>$('#toast').style.display='none',5000)}
 function matchLine(m){return `Vítkovice Ridera <span class="versus">vs.</span> ${esc(m.opponent)}`}
-function selectMatch(){return `<label class="field-label" for="match">Aktivní zápas pro celý kiosek</label><select id="match">${matches.map(m=>`<option value="${m.id}" ${m.id===currentId?'selected':''}>${fmt(m.date,{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · ${esc(m.opponent)}</option>`).join('')}</select><p class="hint">Změna se uloží pro všechny další návštěvníky tohoto zařízení. Návštěvníci zápas nevybírají.</p>`}
+function selectMatch(){return `<label class="field-label" for="match">Aktivní zápas pro celý kiosek</label><select id="match">${matches.map(m=>`<option value="${m.id}" ${m.id===currentId?'selected':''}>${fmt(m.date,{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit'})} · ${esc(m.opponent)}</option>`).join('')}</select><p class="hint">Změna se uloží pro všechny další návštěvníky tohoto zařízení. Návštěvníci zápas nevybírají. Po oficiálním výsledku a vyhlášení kiosek v 6:00 ráno po zápase sám přepne na nejbližší další zápas.</p>`}
 function teamBadge(id){const team=HockeyTeams[id];if(!team)return '<span class="team-badge team-logo-fallback">HC</span>';return `<span class="team-badge" role="img" aria-label="Logo ${esc(team.name)}"><img class="team-logo" src="${esc(team.logo)}" alt="" data-remote-logo="${esc(team.remoteLogo)}"><span class="team-logo-fallback" hidden>${esc(team.short)}</span></span>`}
 function matchCard(){const m=current();return `<section class="hero featured-match" aria-label="Zápas této VIP soutěže"><div class="hero-top"><span>DNEŠNÍ VIP SOUTĚŽ · ${m.round}. KOLO</span><span class="live" id="match-status">${closed(m)?'● TIPOVÁNÍ UZAVŘENO':open(m)?'● TIPOVÁNÍ OTEVŘENO':'● ČEKÁME NA OTEVŘENÍ'}</span></div><div class="matchup"><div class="team">${teamBadge('vit')}<strong>VÍTKOVICE RIDERA</strong><small>DOMÁCÍ</small></div><span class="versus">VS</span><div class="team">${teamBadge(m.awayTeamId)}<strong>${esc(m.short)}</strong><small>HOSTÉ</small></div></div><div class="match-info">${fmt(m.date,{day:'numeric',month:'long',year:'numeric'})} &nbsp; / &nbsp; ${fmt(m.date,{hour:'2-digit',minute:'2-digit'})} &nbsp; / &nbsp; Domácí led</div><div class="countdown"><span id="countdown-label">${state.results[m.id]?'Soutěž tohoto zápasu skončila':closed(m)?'Tipy jsou uzamčené · zápas běží':open(m)?'Tipování se zamkne za':'Tipování se otevře za'}</span><b id="countdown" role="timer">${countdownText(m)}</b></div></section>`}
 function countdownText(m){if(closed(m))return 'TIPY UZAVŘENY';if(open(m))return clock(locksAt(m)-Date.now());return clock(opensAt(m)-Date.now())}
@@ -134,7 +134,7 @@ function submitEntry(){const m=current();if(!canTip(m)){message(closed(m)?'Tipov
 function submitResult(){if(!adminAuthenticated)return;const m=current();if(!closed(m)||state.results[m.id]){message('Tento zápas teď nelze vyhodnotit.');return}const h=$('#result-home').value,a=$('#result-away').value;const result={home:h===''?null:Number(h),away:a===''?null:Number(a),confirmedAt:new Date().toISOString()};const [kind,winner]=String($('#result-decision').value||'').split(':');result.decision=kind||'regulation';if(kind&&Competition.validScore(result.home)&&Competition.validScore(result.away))result.total={home:result.home+(winner==='home'?1:0),away:result.away+(winner==='away'?1:0)};if(!Competition.validScore(result.home)||!Competition.validScore(result.away)||!$('#result-confirm').checked){message('Vyplň skóre a potvrď ověření výsledku.');return}if(result.home===result.away&&result.decision==='regulation'){message('Při remíze po 60 minutách vyber, kdo vyhrál prodloužení nebo nájezdy.');return}if(!Competition.validDecision(result)){message('Prodloužení nebo nájezdy jsou možné jen při remíze po 60 minutách.');return}if(persist({...state,results:{...state.results,[m.id]:result}})){resultScreen();showCelebration(false)}}
 function home(){awardBackground(false);celebration=null;demo=null;adminAuthenticated=false;testMode=false;practiceEntries=[];currentId=state.activeMatchId;lastActivity=Date.now();if($('#dialog').open)$('#dialog').close();if(location.hash)history.replaceState(null,'',location.pathname+location.search);welcome()}
 $('#main').addEventListener('submit',event=>{event.preventDefault();if(event.target.id==='entry-form')submitEntry();if(event.target.id==='result-form')submitResult();if(event.target.id==='prizes-form')savePrizes()});
-$('#main').addEventListener('change',event=>{if(event.target.id==='match'&&screen==='staff'&&adminAuthenticated&&matches.some(m=>m.id===event.target.value)){if(persist({...state,activeMatchId:event.target.value})){currentId=event.target.value;staff()}else event.target.value=currentId}});
+$('#main').addEventListener('change',event=>{if(event.target.id==='match'&&screen==='staff'&&adminAuthenticated&&matches.some(m=>m.id===event.target.value)){if(persist({...state,activeMatchId:event.target.value,activeMatchSetAt:new Date().toISOString()})){currentId=event.target.value;staff()}else event.target.value=currentId}});
 $('#main').addEventListener('input',event=>{if(['home-score','away-score'].includes(event.target?.id))syncDecision()});
 $('#main').addEventListener('click',event=>{const b=event.target.closest('[data-outcome]');if(b){outcome=b.dataset.outcome;document.querySelectorAll('[data-outcome]').forEach(el=>{el.classList.toggle('selected',el.dataset.outcome===outcome);el.setAttribute('aria-pressed',String(el.dataset.outcome===outcome))})}const player=event.target.closest('[data-player-id]');if(player)playerScreen(player.dataset.playerId);const group=event.target.closest('[data-player-group]');if(group)playersScreen(group.dataset.playerGroup);const era=event.target.closest('[data-era]');if(era)achievementsScreen(era.dataset.era);const prizeButton=event.target.closest('[data-action=prize-add],[data-action=prize-remove]');if(prizeButton){if(prizeButton.dataset.action==='prize-add')addPrizeRow();else removePrizeRow(Number(prizeButton.dataset.index));return}const action=event.target.closest('[data-action]')?.dataset.action;if(action==='award')showCelebration(false);if(action==='achievements')achievementsScreen();if(action==='players')playersScreen();if(action==='celebration-dismiss')dismissCelebration();if(action==='demo-start')startDemo();if(action==='demo-next'&&adminAuthenticated)advanceDemo();if(action==='demo-toggle'&&adminAuthenticated&&demo&&demo.index<demo.steps.length-1){demo.playing=!demo.playing;demo.lastStepAt=Date.now();demoScreen()}if(action==='demo-restart'&&adminAuthenticated)startDemo();if(action==='demo-exit'&&adminAuthenticated)staff();if(action==='test-start'&&adminAuthenticated){testMode=true;form()}if(action==='admin-panel'&&adminAuthenticated)staff();if(action==='keyboard-toggle'&&adminAuthenticated)toggleKeyboardDock();if(action==='start')form();if(action==='home')home();if(action==='winners')resultScreen();if(action==='rules')rules()});
 // Touch keyboard for the staff login: ASCII letters and digits only, Shift for capitals.
@@ -185,12 +185,33 @@ $('#admin-access').onclick=adminLogin;
 document.addEventListener('keydown',event=>{if(screen==='celebration'&&event.key==='Escape'){event.preventDefault();dismissCelebration()}});
 $('#rules').onclick=rules;$('.close').onclick=()=>$('#dialog').close();
 for(const type of ['pointerdown','keydown','input'])document.addEventListener(type,()=>lastActivity=Date.now());
+// After the official result and the winner announcement the kiosk moves on by itself: at 6:00 the morning after
+// the match (never sooner than the five-minute announcement) it switches to the nearest match still to come.
+// A finished match that staff pick by hand after that moment stays pinned.
+const SWITCH_HOUR=6;
+function nextMatchAt(m){
+  const result=state.results[m.id];if(!result)return Infinity;
+  const morning=new Date(m.date);morning.setDate(morning.getDate()+1);morning.setHours(SWITCH_HOUR,0,0,0);
+  const announced=Date.parse(result.confirmedAt);
+  return Math.max(morning.getTime(),Number.isFinite(announced)?announced+WINNER_DURATION:0);
+}
+function upcomingMatch(){return matches.filter(m=>!state.results[m.id]&&Date.now()<locksAt(m)).sort((a,b)=>new Date(a.date)-new Date(b.date))[0]}
+function autoAdvanceMatch(){
+  if(screen!=='welcome'||adminAuthenticated||celebration||demo||$('#dialog').open)return false;
+  const m=matches.find(x=>x.id===state.activeMatchId);if(!m)return false;
+  const switchAt=nextMatchAt(m),pinned=Date.parse(state.activeMatchSetAt);
+  if(Date.now()<switchAt||Number.isFinite(pinned)&&pinned>=switchAt)return false;
+  const next=upcomingMatch();if(!next||next.id===m.id)return false;
+  if(!persist({...state,activeMatchId:next.id,activeMatchSetAt:null}))return false;
+  currentId=next.id;welcome();return true;
+}
 let lastMatchPhase=closed(current())?'closed':open(current())?'open':'waiting';
 setInterval(()=>{
   tickPartners();
   if(screen==='celebration'){if(celebration&&Date.now()>=celebration.expiresAt)dismissCelebration();return}
   if((screen!=='welcome'||adminAuthenticated||$('#dialog').open)&&Date.now()-lastActivity>90000)home();
   if(screen==='demo'&&demo?.playing&&Date.now()-demo.lastStepAt>=5000)advanceDemo();
+  if(autoAdvanceMatch())lastMatchPhase=null;
   pollLive();refreshBoard();refreshParticipants();updateKeyboardDock();
   const m=current(),phase=closed(m)?'closed':open(m)?'open':'waiting';
   if($('#countdown'))$('#countdown').textContent=countdownText(m);
