@@ -23,6 +23,14 @@ Tipy se zamknou samy 10 minut po začátku (administrace ukazuje přesné časov
 
 Vyhrává nejmenší součet absolutních odchylek od skóre **po 60 minutách**; přesný tip má odchylku nula. Tip s prodloužením / nájezdy (`decision: "extra"`, skóre o jeden gól; starší tipy mohou mít `overtime` / `shootout` a počítají se stejně) se porovnává jako remíza o gól nižší (`Competition.regulationOf`: 3:2 → 2:2). Při shodě rozhoduje 1) menší odchylka od konečného skóre včetně prodloužení a nájezdů (`total`, tedy kdo trefil vítěze), 2) dřívější čas. Jestli zápas rozhodlo prodloužení, nebo až nájezdy, na pořadí nemá vliv. Příklad 2:2 po 60 minutách, Vítkovice vyhrály 3:2 v nájezdech: 3:2 s prodloužením/nájezdy > 2:2 > 2:3 s prodloužením/nájezdy > 3:2 v základní době. Když zápas skončí 3:2 v základní době, vyhraje naopak tip 3:2 bez prodloužení. Poté rozhoduje dřívější čas odeslání tipu (`savedAt`) — kdo tipuje dřív a stejně přesně, vyhrává sám. Tipy bez časového razítka se řadí za ostatní. Dřívější tip na počet gólů (0–5 / 6 a více) formulář už nenabízí; u starších uložených tipů se při shodě započítá až po tipu na prodloužení / nájezdy. Tabulka pořadí i vyhlášení ukazují čas tipu.
 
+## Záloha tipů a výsledků
+
+Tipy, výsledky, ceny a vybraný zápas se ukládají jen do localStorage prohlížeče (klíč `vitkovice-vip-kiosk-v1`). Přežijí restart prohlížeče i PC a výpadek internetu, ne však vymazání dat prohlížeče, anonymní okno nebo změnu prohlížeče či adresy. Proto má administrace blok **Záloha tipů a výsledků**:
+
+- **Stáhnout zálohu** uloží celý stav do `vitkovice-vip-zaloha-RRRR-MM-DD-HHMM.json` a zapamatuje si čas poslední zálohy (ukazuje ho administrace). Doporučení: po každém zápase zálohu uložit mimo kiosek (USB disk, e-mail).
+- **Tabulka tipů pro Excel (CSV)** stáhne čitelný přehled všech tipů po zápasech: pořadí, jméno, tip, prodloužení/nájezdy, odchylka, čas tipu, výsledek po 60 minutách a konečný výsledek (UTF-8 s BOM, oddělovač středník). Jména začínající znaky = + - @ dostanou apostrof, aby je Excel nespustil jako vzorec.
+- **Obnovit ze zálohy…** načte JSON zálohu a po potvrzení jen **doplní** chybějící tipy (podle `id`) a výsledky. Nic stávajícího nepřepíše, vybraný zápas nemění. Funkce `backupJson`, `backupCsv`, `mergeBackup` v `dist/app.js`.
+
 ## Dotyková klávesnice
 
 Přihlášení do administrace má vlastní dotykovou klávesnici (číslice, písmena bez háčků a čárek, Shift, mazání, mezera) v klubovém vzhledu s logem; fyzická klávesnice funguje dál. V administraci je navíc přepínač **⌨ Klávesnice: zapnuta/vypnuta** – po zapnutí se dole nad partnery ukotví klávesnice i s českými znaky (ě š č ř ž ý á í é ú ů ď ť ň), která píše do naposledy aktivního pole: ceny a výsledek v administraci i jméno návštěvníka ve formuláři tipu. Tlačítko „Další pole“ přeskočí na následující vstup. Volba se ukládá do zařízení (`localStorage` klíč `kiosk-keyboard`). Rozvržení je v `keyboardMarkup()` v `dist/app.js`.
@@ -35,7 +43,7 @@ Volba **Zpět do administrace** umožní pokračovat v práci. Návrat na úvod,
 
 ## Omezení prototypu
 
-Data jsou pouze v localStorage tohoto prohlížeče; při vymazání úložiště se ztratí. Administrace má pouze místní heslovou bránu v JavaScriptu. Heslo lze zjistit ze zdrojového kódu; nejde o serverové zabezpečení a není vhodné k ostré soutěži. Jména nejsou ověřená. Před sběrem skutečných návštěvníků je potřeba serverová databáze, přihlášení obsluhy, serverové uzávěrky a pravidla zpracování a uchování jmen. Výsledky se načítají z veřejného výsledkového zdroje hokej.cz bez smlouvy; při změně jeho formátu je potřeba upravit adaptér. Rozpis je statický, ověřený 19. 10. 2026; termíny se nesynchronizují. Nejde o nasazenou produkční soutěž.
+Data jsou pouze v localStorage tohoto prohlížeče; při vymazání úložiště se ztratí, pokud obsluha nemá zálohu (viz Záloha tipů a výsledků). Administrace má pouze místní heslovou bránu v JavaScriptu. Heslo lze zjistit ze zdrojového kódu; nejde o serverové zabezpečení a není vhodné k ostré soutěži. Jména nejsou ověřená. Před sběrem skutečných návštěvníků je potřeba serverová databáze, přihlášení obsluhy, serverové uzávěrky a pravidla zpracování a uchování jmen. Výsledky se načítají z veřejného výsledkového zdroje hokej.cz bez smlouvy; při změně jeho formátu je potřeba upravit adaptér. Rozpis je statický, ověřený 19. 10. 2026; termíny se nesynchronizují. Nejde o nasazenou produkční soutěž.
 
 Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotografiemi, kariérní údaje tam, kde je klub zveřejňuje, sezónní statistiky a partnerská loga. Starý ukázkový výběr v `dist/data.js` se v galerii nepoužívá.
 

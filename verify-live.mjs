@@ -91,4 +91,18 @@ assert.equal(vm.runInContext('autoAdvanceMatch()',context),false);assert.equal(s
 // A result recorded late (e.g. the next morning) still gets its five-minute announcement first.
 vm.runInContext("persist({...state,activeMatchSetAt:null,results:{...state.results,lib:{...state.results.lib,confirmedAt:new Date().toISOString()}}})",context);
 assert.equal(vm.runInContext('autoAdvanceMatch()',context),false);now+=5*60*1000;assert.equal(vm.runInContext('autoAdvanceMatch()',context),true);
-console.log('PASS: hokej.cz adapter (regulation score from periods, phases, breaks, overtime, away orientation, cancelled), worker mirror, live ranking, outage handling, closure at end of regulation, automatic official result and winner announcement; optional overtime/shootout tip (final score one goal apart = draw after 60 minutes, one merged option, ranked by the final score), decision read from the source; morning switch to the next match (not before 6:00, not during staff work, staff pin respected).');
+// Backup: download as JSON/CSV and merge back in without overwriting anything.
+const csv=vm.runInContext('backupCsv()',context);
+assert.ok(csv.startsWith('\ufeff'));assert.match(csv,/Zápas;Datum zápasu;Pořadí;Jméno/);assert.match(csv,/Jan Novák;2:1;/);assert.match(csv,/;3:2;4:2$/m,'60-minute and final score');
+const backup=vm.runInContext('backupJson()',context);assert.equal(JSON.parse(backup).app,'vitkovice-vip-kiosk');
+assert.equal(vm.runInContext(`mergeBackup(${JSON.stringify(backup)}).addedEntries.length`,context),0,'nothing to add from an up-to-date backup');
+vm.runInContext("persist({...state,entries:[],results:{}})",context);
+const merged=vm.runInContext(`(()=>{const m=mergeBackup(${JSON.stringify(backup)});persist(m.next);return JSON.stringify([m.addedEntries.length,Object.keys(m.addedResults)])})()`,context);
+assert.deepEqual(JSON.parse(merged),[1,['lib']]);assert.equal(saved().entries[0].name,'Jan Novák');assert.equal(saved().results.lib.home,3);
+vm.runInContext("persist({...state,results:{lib:{...state.results.lib,home:9}}})",context);
+vm.runInContext(`persist(mergeBackup(${JSON.stringify(backup)}).next)`,context);assert.equal(saved().results.lib.home,9,'restore never overwrites');
+assert.throws(()=>vm.runInContext("mergeBackup('není json')",context),/platná záloha/);
+assert.throws(()=>vm.runInContext("mergeBackup('{\"a\":1}')",context),/záloha VIP kiosku/);
+vm.runInContext("persist({...state,entries:[...state.entries,{id:'x',matchId:'kom',name:'=SUM(A1)',home:1,away:0,outcome:'1',goals:'',savedAt:new Date().toISOString()}]})",context);
+assert.match(vm.runInContext('backupCsv()',context),/;'=SUM\(A1\);/,'no spreadsheet formulas from visitor names');
+console.log('PASS: hokej.cz adapter (regulation score from periods, phases, breaks, overtime, away orientation, cancelled), worker mirror, live ranking, outage handling, closure at end of regulation, automatic official result and winner announcement; optional overtime/shootout tip (final score one goal apart = draw after 60 minutes, one merged option, ranked by the final score), decision read from the source; morning switch to the next match (not before 6:00, not during staff work, staff pin respected); backup JSON/CSV export and non-destructive restore.');

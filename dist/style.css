@@ -433,3 +433,8 @@ html::-webkit-scrollbar,body.kiosk::-webkit-scrollbar,body.kiosk *::-webkit-scro
 
 /* Optional overtime/shootout tip: only usable after the visitor picks a draw. */
 .decision-field select:disabled{opacity:.45;cursor:not-allowed}
+
+/* Staff backup: download / restore. */
+.backup-actions{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin:6px 0 4px}
+.backup-restore{position:relative;cursor:pointer}
+.backup-restore input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
