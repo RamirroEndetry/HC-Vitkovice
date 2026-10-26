@@ -18,6 +18,11 @@ assert.deepEqual(Competition.evaluate([tip('Petr Novák',2,1),tip('Eva Nová',3,
 assert.deepEqual(Competition.evaluate([tip('Petr Novák',3,1),tip('Eva Nová',2,2)],{home:2,away:1}).map(e=>e.name),['Petr Novák','Eva Nová']);
 assert.deepEqual(Competition.evaluate([tip('Petr Novák',3,1),tip('Eva Nová',2,2,'under')],{home:2,away:1}).map(e=>e.name),['Eva Nová']);
 assert.equal(Competition.evaluate([],{home:2,away:1}).length,0);
+// Podium: one place per prize, the 4th tip gets nothing; tips sent at the same moment share a place and skip the next one.
+const at=(entry,time)=>({...entry,savedAt:`2026-10-20T17:${time}:00+02:00`});
+assert.deepEqual(Competition.podium([at(tip('Čtvrtý',5,0),'01'),at(tip('Druhý',3,1),'02'),at(tip('První',2,1),'03'),at(tip('Třetí',4,1),'04')],{home:2,away:1},3).map(e=>[e.name,e.position]),[['První',1],['Druhý',2],['Třetí',3]]);
+assert.deepEqual(Competition.podium([at(tip('Eva',2,1),'01'),at(tip('Petr',2,1),'01'),at(tip('Jan',3,1),'02'),at(tip('Ola',4,1),'03')],{home:2,away:1},3).map(e=>[e.name,e.position]),[['Eva',1],['Petr',1],['Jan',3]]);
+assert.deepEqual(Competition.podium([at(tip('Eva',2,1),'01'),at(tip('Jan',3,1),'02')],{home:2,away:1},1).map(e=>e.name),['Eva']);
 // Equal accuracy: the earlier tip wins; tips without a timestamp rank last.
 assert.deepEqual(Competition.evaluate([{...tip('Pozdní Petr',2,1),savedAt:'2026-10-20T17:35:00+02:00'},{...tip('Brzká Eva',2,1),savedAt:'2026-10-20T17:05:00+02:00'}],{home:2,away:1}).map(e=>e.name),['Brzká Eva']);
 assert.deepEqual(Competition.rank([{...tip('Bez času',2,1)},{...tip('S časem',2,1),savedAt:'2026-10-20T17:05:00+02:00'}],{home:2,away:1}).map(e=>e.name+e.position),['S časem1','Bez času2']);
@@ -48,7 +53,9 @@ vm.runInContext('demo.playing=false; demoScreen()',context);assert.match(el('#ma
 vm.runInContext('advanceDemo()',context);assert.equal(vm.runInContext('demo.index',context),1);
 const leaderAtDraw=vm.runInContext('Competition.evaluate(demo.tips,{home:1,away:1})[0].name',context);
 const leaderAtHomeLead=vm.runInContext('Competition.evaluate(demo.tips,{home:2,away:1})[0].name',context);assert.notEqual(leaderAtDraw,leaderAtHomeLead);
-vm.runInContext('while(demo.index<demo.steps.length-1)advanceDemo()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězi/);assert.match(el('#main').innerHTML,/Cenu si vyzvedněte ve VIP zóně/);assert.equal(storage.values().next().value,earlySnapshot);
+vm.runInContext('while(demo.index<demo.steps.length-1)advanceDemo()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězi/);assert.match(el('#main').innerHTML,/Ceny si vyzvedněte ve VIP zóně/);
+// Three default prizes: the demo's 3 tips take 1st, 2nd and 3rd place, each with its own prize.
+assert.match(el('#main').innerHTML,/1\. místo · Tip 3 : 2[\s\S]*Podepsaný dres[\s\S]*place-2">2\.[\s\S]*Tip 2 : 1[\s\S]*Dvě vstupenky[\s\S]*place-3">3\.[\s\S]*Tip 1 : 1[\s\S]*Klubový balíček/);assert.equal(storage.values().next().value,earlySnapshot);
 assert.equal(vm.runInContext('screen',context),'celebration');
 const awardDeadline=vm.runInContext('celebration.expiresAt',context);
 now=new Date(awardDeadline-1).toISOString();context.tick();assert.equal(vm.runInContext('screen',context),'celebration');

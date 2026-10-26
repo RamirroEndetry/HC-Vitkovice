@@ -37,6 +37,8 @@
     return sorted.map((entry,index)=>{if(!previous||!same(entry,previous)||tipTime(entry)!==tipTime(previous))position=index+1;previous=entry;return {...entry,position}});
   }
   function evaluate(entries,result){return rank(entries,result).filter(entry=>entry.position===1)}
-  const api={validDecision,regulationOf,finalOf,validScore,resultOf,validate,rank,evaluate,tipTime};
+  // Tips that win a prize: one place per prize. Tied tips share a place and the next place is skipped (1., 1., 3.).
+  function podium(entries,result,places){return rank(entries,result).filter(entry=>entry.position<=places)}
+  const api={validDecision,regulationOf,finalOf,validScore,resultOf,validate,rank,evaluate,podium,tipTime};
   if(typeof module!=='undefined')module.exports=api;else root.Competition=api;
 })(globalThis);

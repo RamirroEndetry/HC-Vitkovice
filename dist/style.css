@@ -151,6 +151,8 @@
   .rank-row{font-size:19px}
   .winner-names{font-size:48px}
   .results-screen .prize{font-size:26px;padding:26px}
+  .podium-list strong{font-size:40px}
+  .podium-list small,.podium-prize{font-size:18px}
   .confirmation h1{font-size:110px}
   .confirmation>p,.confirmation .attract-match{font-size:26px}
   .confirmation-icon{width:140px;height:140px;font-size:72px}
@@ -305,6 +307,28 @@
 .prize-list li:first-child .prize-place{background:linear-gradient(135deg,#f3d98b,#c8a24a);border-color:#f1cf7a;color:#3a2b06}
 .prize-list li:nth-child(2) .prize-place{background:linear-gradient(135deg,#e8edf3,#aab6c6);color:#2f3d50;border-color:#dfe6ee}
 .prize-list li:nth-child(3) .prize-place{background:linear-gradient(135deg,#d9a06c,#9a5f33);color:#2b1708;border-color:#e0b48a}
+/* prize winners: 1st, 2nd, 3rd place (and further prizes) */
+.prize-place.place-1{background:linear-gradient(135deg,#f3d98b,#c8a24a);border-color:#f1cf7a;color:#3a2b06}
+.prize-place.place-2{background:linear-gradient(135deg,#e8edf3,#aab6c6);border-color:#dfe6ee;color:#2f3d50}
+.prize-place.place-3{background:linear-gradient(135deg,#d9a06c,#9a5f33);border-color:#e0b48a;color:#2b1708}
+.podium-list{list-style:none;margin:25px auto;padding:0;display:grid;gap:10px;max-width:760px;text-align:left}
+.podium-list li{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:10px;background:#f3f7fc;border:1px solid #e1e9f3}
+.podium-list li>div{flex:1;min-width:0}
+.podium-list strong{display:block;font:700 26px 'Barlow Condensed',sans-serif;color:#0c315d;overflow-wrap:anywhere}
+.podium-list small{display:block;font-size:12px;color:#7287a0;margin-top:3px}
+.podium-list .prize-place:not(.place-1,.place-2,.place-3){background-color:#e9f0f9;border-color:#d3dfee;color:#2f4d73}
+.podium-prize{flex:none;max-width:40%;text-align:right;font-weight:600;color:#155cba;font-size:14px}
+.score-table .podium-row{background:#f6f9fd}
+.score-table .podium-row td:last-child{color:#155cba;font-weight:600}
+.demo-winners h2 small{display:block;font-size:15px;color:#5d7591;font-weight:500;margin-top:4px}
+.celebration-first-prize{font-size:19px;color:#f0cf85;margin:22px 0 0}
+.celebration-podium{list-style:none;margin:30px auto 0;padding:0;display:grid;gap:10px;max-width:720px;text-align:left}
+.celebration-podium li{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:10px;background:#ffffff0d;border:1px solid #ffffff1c}
+.celebration-podium li>div{flex:1;min-width:0}
+.celebration-podium strong{display:block;font:700 clamp(22px,2.6vw,30px) 'Barlow Condensed',sans-serif;color:white;overflow-wrap:anywhere}
+.celebration-podium small{display:block;font-size:12px;color:#b1c2d7;margin-top:3px}
+.celebration-podium .podium-prize{color:#f0cf85}
+@media(max-width:700px){.podium-list li,.celebration-podium li{flex-wrap:wrap}.podium-prize{max-width:none;width:100%;text-align:left;padding-left:54px}}
 .participant-list{list-style:none;margin:0;padding:0;display:grid;gap:8px}
 .participant-list li{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:#ffffff0a;border:1px solid #ffffff12;animation:screen-in .4s both}
 .participant-list strong{display:block;font-size:14px;overflow-wrap:anywhere}
