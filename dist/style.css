@@ -469,3 +469,29 @@ html::-webkit-scrollbar,body.kiosk::-webkit-scrollbar,body.kiosk *::-webkit-scro
 .tips-admin-list strong{display:block}
 .tips-admin-list small{color:#5b6b80}
 .tip-delete,.tip-delete-all{color:#b3261e;border-color:#f1c6c2}
+
+/* Header actions and the "O aplikaci" dialog with the Digiday contact card. */
+.kiosk-brand .brand-actions{display:flex;gap:12px;align-items:center}
+.kiosk dialog.about-dialog{max-width:640px;padding:0;overflow:auto;scrollbar-width:none;color:#fff;border:1px solid #7fbcff2e;border-radius:22px;background:radial-gradient(120% 70% at 50% 0%,#e4097f2b,transparent 60%),radial-gradient(90% 60% at 50% 100%,#155cba40,transparent 70%),#06162b;box-shadow:0 40px 140px #000d,0 0 0 1px #ffffff0a inset}
+dialog.about-dialog[open]{animation:about-in .55s cubic-bezier(.2,.9,.25,1.15) both}
+dialog.about-dialog::backdrop{background:#030b17cc;backdrop-filter:blur(6px)}
+.about{display:flex;flex-direction:column;align-items:center;text-align:center;padding:58px 56px 50px}
+.about>*{animation:about-rise .7s cubic-bezier(.2,.8,.2,1) both}
+.about>:nth-child(2){animation-delay:.12s}.about>:nth-child(3){animation-delay:.26s}.about>:nth-child(4){animation-delay:.4s}
+.about-eyebrow{font:600 13px 'DM Sans',sans-serif;letter-spacing:6px;color:#8fa9c8}
+.about-logo{position:relative;overflow:hidden;margin:22px 0 34px;padding:30px 46px;background:#fff;border-radius:18px;box-shadow:0 18px 60px #e4097f33,0 0 0 1px #ffffff40}
+.about-logo img{display:block;width:300px;height:auto}
+.about-logo::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,#ffffffcc 50%,transparent 65%);transform:translateX(-120%);animation:about-shine 1.4s .7s ease-in-out both}
+.about-person h2{margin:0 0 16px;font:800 52px/1 'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,#fff,#cfe3ff 55%,#ff7cc0);-webkit-background-clip:text;background-clip:text;color:transparent}
+.about-person h2::after{content:'';display:block;width:64px;height:3px;margin:16px auto 0;border-radius:3px;background:linear-gradient(90deg,#e4097f,#7fbcff)}
+.about-person a{display:flex;justify-content:center;align-items:baseline;gap:14px;color:#e8f1ff;text-decoration:none;font:500 24px/1.6 'DM Sans',sans-serif}
+.about-person a span{font-size:11px;letter-spacing:3px;font-weight:700;color:#ff7cc0;min-width:52px;text-align:right}
+.about-qr{margin:34px 0 0;display:flex;flex-direction:column;align-items:center;gap:16px}
+.about-qr>div{padding:18px;background:#fff;border-radius:18px;box-shadow:0 0 0 6px #ffffff12,0 20px 60px #0009}
+.about-qr img{display:block;width:230px;height:230px}
+.about-qr figcaption{font:600 14px 'DM Sans',sans-serif;letter-spacing:2px;text-transform:uppercase;color:#8fa9c8}
+@keyframes about-in{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+@keyframes about-rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes about-shine{to{transform:translateX(120%)}}
+@media (max-width:700px){.about{padding:44px 22px 32px}.about-logo{padding:20px 26px}.about-logo img{width:200px}.about-person h2{font-size:38px}.about-person a{font-size:17px}.about-qr img{width:190px;height:190px}.kiosk-brand .brand-actions{gap:6px}}
+@media (prefers-reduced-motion:reduce){dialog.about-dialog[open],.about>*,.about-logo::after{animation:none}}
