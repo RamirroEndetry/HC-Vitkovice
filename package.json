@@ -7,8 +7,9 @@
     "check": "node --check dist/app.js && node --check worker.mjs && node verify.cjs && node verify-live.mjs",
     "content:sync": "python scripts/sync-club-content.py",
     "logos:sync": "node scripts/sync-team-logos.cjs",
+    "schedule:sync": "node scripts/sync-schedule.cjs",
     "intro:render": "python scripts/render-intro.py",
-    "build": "npm run logos:sync",
+    "build": "npm run logos:sync && npm run schedule:sync",
     "dev": "npx wrangler dev",
     "deploy": "npx wrangler deploy"
   }

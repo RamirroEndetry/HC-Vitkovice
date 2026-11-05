@@ -52,7 +52,7 @@ Volba **Zpět do administrace** umožní pokračovat v práci. Návrat na úvod,
 
 ## Omezení prototypu
 
-Data jsou pouze v localStorage tohoto prohlížeče; při vymazání úložiště se ztratí, pokud obsluha nemá zálohu (viz Záloha tipů a výsledků). Administrace má pouze místní heslovou bránu v JavaScriptu. Heslo lze zjistit ze zdrojového kódu; nejde o serverové zabezpečení a není vhodné k ostré soutěži. Jména nejsou ověřená. Před sběrem skutečných návštěvníků je potřeba serverová databáze, přihlášení obsluhy, serverové uzávěrky a pravidla zpracování a uchování jmen. Výsledky se načítají z veřejného výsledkového zdroje hokej.cz bez smlouvy; při změně jeho formátu je potřeba upravit adaptér. Rozpis je statický, ověřený 19. 10. 2026; termíny se nesynchronizují. Nejde o nasazenou produkční soutěž.
+Data jsou pouze v localStorage tohoto prohlížeče; při vymazání úložiště se ztratí, pokud obsluha nemá zálohu (viz Záloha tipů a výsledků). Administrace má pouze místní heslovou bránu v JavaScriptu. Heslo lze zjistit ze zdrojového kódu; nejde o serverové zabezpečení a není vhodné k ostré soutěži. Jména nejsou ověřená. Před sběrem skutečných návštěvníků je potřeba serverová databáze, přihlášení obsluhy, serverové uzávěrky a pravidla zpracování a uchování jmen. Výsledky se načítají z veřejného výsledkového zdroje hokej.cz bez smlouvy; při změně jeho formátu je potřeba upravit adaptér. Rozpis domácích zápasů se stahuje z veřejného webu hc-vitkovice.cz bez smlouvy (viz Rozpis zápasů); při změně jeho rozvržení je potřeba upravit `scripts/sync-schedule.cjs`. Nejde o nasazenou produkční soutěž.
 
 Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotografiemi, kariérní údaje tam, kde je klub zveřejňuje, sezónní statistiky a partnerská loga. Starý ukázkový výběr v `dist/data.js` se v galerii nepoužívá.
 
@@ -64,7 +64,7 @@ Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotog
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` při každém pushi do `main` publikuje složku `dist` (a do `index.html` vepíše verzi commitu místo `__V__`, aby kiosky nedržely staré skripty a styly v cache) na https://ramirroendetry.github.io/HC-Vitkovice/. Jde o statický web; živé skóre si kiosek stahuje přímo z hokej.cz, takže na Pages funguje celé. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
+Workflow `.github/workflows/pages.yml` při každém pushi do `main` a každé ráno (cron 3:15 UTC) publikuje složku `dist` (a do `index.html` vepíše verzi commitu místo `__V__`, aby kiosky nedržely staré skripty a styly v cache) na https://ramirroendetry.github.io/HC-Vitkovice/. Před publikováním obnoví rozpis domácích zápasů z hc-vitkovice.cz; když klubový web neodpoví, publikuje se rozpis uložený v repozitáři. Jde o statický web; živé skóre si kiosek stahuje přímo z hokej.cz, takže na Pages funguje celé. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
 
 ## Cloudflare
 
@@ -126,6 +126,16 @@ Na telefonech se spořič nespouští (není to kiosek a mobilní prohlížeče 
 - `npm run build` provede stejnou synchronizaci před nasazením; může vyžadovat přístup k síti.
 - Adresy se znovu zjišťují z oficiálního webu podle jmen klubů; pokud se název nenajde, použije se známá adresa.
 - `sources.json` zaznamenává zdroj, čas stažení, velikost a kontrolní součet každého souboru.
+
+## Rozpis zápasů
+
+Kiosek stojí ve VIP zóně Mustang Arény, proto soutěž běží jen při domácích zápasech. `dist/schedule.js` je generovaný seznam domácích zápasů mužů od 20. 10. 2026 (první zápas soutěže) do konce základní části; ručně se neupravuje.
+
+- `npm run schedule:sync` stáhne rozpis z https://www.hc-vitkovice.cz/zapasy/MUZ, vezme jen zápasy označené jako domácí, soupeře spáruje s `dist/teams.js` a zapíše kolo, soupeře a termín (čas v Praze s platným posunem). Venkovní zápasy vynechá.
+- Id zápasu je `r<kolo>-<soupeř>`, takže přeložený termín nezmění id a tipy i výsledky v localStorage zůstanou u správného zápasu. Prvním třem zápasům zůstala původní id `lib`, `kom`, `tri`.
+- Skript nic nezapíše, když najde méně než 10 zápasů, neznámého soupeře, duplicitní id nebo chybí některý z původních zápasů; kiosek pak jede dál s posledním uloženým rozpisem.
+- Publikování na GitHub Pages rozpis obnovuje při každém pushi a každé ráno; po změně na klubovém webu ho stáhněte i lokálně a commitněte, aby se repozitář neodchýlil.
+- Kiosek sám přepne na nejbližší další domácí zápas ráno po zápase s výsledkem (viz Obsluha a vyhodnocení).
 - Kiosek nejdříve používá místní kopii, při selhání zkusí známou vzdálenou adresu a pak zobrazí zkratku klubu. Běžné zobrazování proto nevyžaduje opakované stahování od klubového webu.
 
 Při přidání nového účastníka extraligy se rozšíří registr týmů; změna loga stávajícího klubu se promítne při další synchronizaci.

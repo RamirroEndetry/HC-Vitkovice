@@ -1,11 +1,14 @@
 # Publishes the static kiosk (dist/) to GitHub Pages on every push to main.
 # Live scores (/api/live) need the Cloudflare worker; on Pages the kiosk runs without them.
+# Runs again every morning so the home-match schedule follows hc-vitkovice.cz (postponed games, new dates).
 name: GitHub Pages
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  schedule:
+    - cron: '15 3 * * *'
 
 permissions:
   contents: read
@@ -25,6 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Refresh the home-match schedule from hc-vitkovice.cz
+        run: node scripts/sync-schedule.cjs || echo "::warning::Schedule sync failed; publishing the committed dist/schedule.js"
       - name: Stamp asset version for cache busting
         run: sed -i "s/__V__/${GITHUB_SHA::8}/g" dist/index.html
       - uses: actions/upload-pages-artifact@v3

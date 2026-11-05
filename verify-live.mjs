@@ -67,7 +67,7 @@ const initial={activeMatchId:'lib',entries:[{id:'real-1',matchId:'lib',name:'Jan
 const stored=new Map([['vitkovice-vip-kiosk-v1',JSON.stringify(initial)]]);
 let state={match_status:'live',score_home:'2',score_visitor:'1',score_period:['1:0','1:1','0:0'],match_last_time:"52'",match_actual_time_alias:'3',match_actual_time_name:'3. třetina'},status=200,fetchedUrl='';
 const context={console,Intl,Date:Clock,Competition,LiveMatch,HockeyTeams,ClubContent,AbortController,crypto:{randomUUID:()=>String(Math.random())},fetch:async url=>{fetchedUrl=String(url);return {ok:status===200,status,json:async()=>scoreboard(game(state))}},setTimeout(){},clearTimeout(){},setInterval(){},localStorage:{getItem:k=>stored.get(k),setItem:(k,v)=>stored.set(k,v)},document:{querySelector:el,querySelectorAll:()=>[],addEventListener(){}},location:{hash:'',pathname:'/',search:''},history:{replaceState(){}},addEventListener(){}};
-vm.createContext(context);vm.runInContext(fs.readFileSync('dist/data.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/club-ui.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),context);
+vm.createContext(context);vm.runInContext(fs.readFileSync('dist/schedule.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/data.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/club-ui.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),context);
 const saved=()=>JSON.parse(stored.get('vitkovice-vip-kiosk-v1')),board=()=>vm.runInContext('realBoardMarkup()',context);
 await vm.runInContext('pollLive()',context);
 assert.equal(fetchedUrl,LiveMatch.feedUrl('2026-10-20'));
