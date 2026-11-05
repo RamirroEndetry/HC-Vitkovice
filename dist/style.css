@@ -484,8 +484,8 @@ dialog.about-dialog::backdrop{background:#030b17cc;backdrop-filter:blur(6px)}
 .about-logo::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,transparent 35%,#ffffffcc 50%,transparent 65%);transform:translateX(-120%);animation:about-shine 1.4s .7s ease-in-out both}
 .about-person h2{margin:0 0 16px;font:800 52px/1 'Barlow Condensed',sans-serif;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(90deg,#fff,#cfe3ff 55%,#ff7cc0);-webkit-background-clip:text;background-clip:text;color:transparent}
 .about-person h2::after{content:'';display:block;width:64px;height:3px;margin:16px auto 0;border-radius:3px;background:linear-gradient(90deg,#e4097f,#7fbcff)}
-.about-person{display:grid;grid-template-columns:auto auto;column-gap:14px;align-items:baseline;text-align:left}.about-person a{display:contents;color:#e8f1ff;text-decoration:none;font:500 24px/1.6 'DM Sans',sans-serif}
-.about-person a span{font-size:11px;letter-spacing:3px;font-weight:700;color:#ff7cc0;min-width:52px;text-align:right}
+.about-person{display:flex;flex-direction:column;align-items:stretch;text-align:left}.about-person a{display:flex;align-items:baseline;gap:14px;color:#e8f1ff;text-decoration:none;font:500 24px/1.6 'DM Sans',sans-serif}
+.about-person a span{font-size:11px;letter-spacing:3px;font-weight:700;color:#ff7cc0;width:80px;flex:none;text-align:right}
 .about-qr{margin:34px 0 0;display:flex;flex-direction:column;align-items:center;gap:16px}
 .about-qr>div{padding:18px;background:#fff;border-radius:18px;box-shadow:0 0 0 6px #ffffff12,0 20px 60px #0009}
 .about-qr img{display:block;width:230px;height:230px}

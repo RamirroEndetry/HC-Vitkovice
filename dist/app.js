@@ -5,6 +5,7 @@ const key='vitkovice-vip-kiosk-v1';
 let state={entries:[],results:{},closedMatches:{}};
 try{const saved=JSON.parse(localStorage.getItem(key));if(saved&&Array.isArray(saved.entries)&&saved.results&&typeof saved.results==='object')state=saved}catch{}
 state.closedMatches=state.closedMatches&&typeof state.closedMatches==='object'?state.closedMatches:{};
+if(typeof matches==='undefined'||!Array.isArray(matches)||!matches.length){$('#main').innerHTML='<section class="kiosk-card"><h1>Rozpis zápasů se nenačetl</h1><p>Obnovte stránku. Pokud chyba trvá, zavolejte obsluhu.</p></section>';throw Error('dist/schedule.js did not load')}
 let currentId=matches.some(m=>m.id===state.activeMatchId)?state.activeMatchId:(matches.find(m=>new Date(m.date)>new Date())?.id||matches.at(-1).id);
 state.activeMatchId=currentId;
 try{localStorage.setItem(key,JSON.stringify(state))}catch{}
@@ -49,10 +50,11 @@ function backupJson(){return JSON.stringify({app:BACKUP_APP,version:1,exportedAt
 function backupCsv(){
   const cell=v=>{let text=v==null?'':String(v);if(/^[-=+@]/.test(text))text="'"+text;return /[;"\r\n]/.test(text)?`"${text.replace(/"/g,'""')}"`:text};
   const rows=[['Zápas','Datum zápasu','Pořadí','Jméno','Tip','Prodloužení / nájezdy','Odchylka po 60 min','Čas tipu','Výsledek po 60 min','Konečný výsledek']];
-  for(const m of matches){
+  const listed=new Set(matches.map(m=>m.id)),orphans=[...new Set(state.entries.map(e=>e.matchId))].filter(id=>!listed.has(id)).map(id=>({id,opponent:`Zápas mimo rozpis (${id})`,date:null}));
+  for(const m of [...matches,...orphans]){
     const tips=entries(m.id),result=state.results[m.id];if(!tips.length)continue;
     const ranked=result?Competition.rank(tips,result):tips.slice().sort((a,b)=>Competition.tipTime(a)-Competition.tipTime(b)).map(e=>({...e,position:null,distance:null}));
-    for(const e of ranked)rows.push([m.opponent,fmt(m.date,{day:'numeric',month:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}),e.position??'',e.name,`${e.home}:${e.away}`,decisionLabel[e.decision]?'ano':'',e.distance??'',e.savedAt&&!isNaN(new Date(e.savedAt))?fmt(e.savedAt,{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}):'',result?`${result.home}:${result.away}`:'',result?.total?`${result.total.home}:${result.total.away}`:result?`${result.home}:${result.away}`:'']);
+    for(const e of ranked)rows.push([m.opponent,m.date?fmt(m.date,{day:'numeric',month:'numeric',year:'numeric',hour:'2-digit',minute:'2-digit'}):'',e.position??'',e.name,`${e.home}:${e.away}`,decisionLabel[e.decision]?'ano':'',e.distance??'',e.savedAt&&!isNaN(new Date(e.savedAt))?fmt(e.savedAt,{day:'numeric',month:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit'}):'',result?`${result.home}:${result.away}`:'',result?.total?`${result.total.home}:${result.total.away}`:result?`${result.home}:${result.away}`:'']);
   }
   return '\ufeff'+rows.map(r=>r.map(cell).join(';')).join('\r\n');
 }
@@ -67,10 +69,10 @@ function mergeBackup(text){
   let data;try{data=JSON.parse(text)}catch{throw Error('Soubor není platná záloha (JSON).')}
   const saved=data?.app===BACKUP_APP?data.state:null;
   if(!saved||!Array.isArray(saved.entries))throw Error('Soubor není záloha VIP kiosku.');
-  const known=new Set(matches.map(m=>m.id)),ids=new Set(state.entries.map(e=>e.id));
-  const addedEntries=saved.entries.filter(e=>e&&typeof e.id==='string'&&!ids.has(e.id)&&known.has(e.matchId)&&!Competition.validate(e));
+  const ids=new Set(state.entries.map(e=>e.id));
+  const addedEntries=saved.entries.filter(e=>e&&typeof e.id==='string'&&!ids.has(e.id)&&typeof e.matchId==='string'&&e.matchId&&!Competition.validate(e));
   const addedResults={};
-  for(const [id,r] of Object.entries(saved.results&&typeof saved.results==='object'?saved.results:{}))if(known.has(id)&&!state.results[id]&&Competition.validScore(r?.home)&&Competition.validScore(r?.away))addedResults[id]=r;
+  for(const [id,r] of Object.entries(saved.results&&typeof saved.results==='object'?saved.results:{}))if(id&&!state.results[id]&&Competition.validScore(r?.home)&&Competition.validScore(r?.away))addedResults[id]=r;
   const closed={...(saved.closedMatches&&typeof saved.closedMatches==='object'?saved.closedMatches:{}),...state.closedMatches};
   const prizes={...(saved.prizes&&typeof saved.prizes==='object'?saved.prizes:{}),...(state.prizes||{})};
   return {exportedAt:data.exportedAt,addedEntries,addedResults,next:{...state,entries:[...state.entries,...addedEntries],results:{...state.results,...addedResults},closedMatches:closed,prizes}};
@@ -266,7 +268,7 @@ for(const type of ['pointerdown','keydown','input'])document.addEventListener(ty
 // After the official result and the winner announcement the kiosk moves on by itself: at 6:00 the morning after
 // the match (never sooner than the five-minute announcement) it switches to the nearest match still to come.
 // A finished match that staff pick by hand after that moment stays pinned.
-const SWITCH_HOUR=6;
+const SWITCH_HOUR=6,LOADED_AT=Date.now(),RELOAD_AFTER=20*60*60*1000,RELOAD_IDLE=10*60*1000;
 function nextMatchAt(m){
   const result=state.results[m.id];if(!result)return Infinity;
   const morning=new Date(m.date);morning.setDate(morning.getDate()+1);morning.setHours(SWITCH_HOUR,0,0,0);
@@ -290,6 +292,8 @@ setInterval(()=>{
   if((screen!=='welcome'||adminAuthenticated||$('#dialog').open)&&Date.now()-lastActivity>90000)home();
   if(screen==='demo'&&demo?.playing&&Date.now()-demo.lastStepAt>=5000)advanceDemo();
   if(autoAdvanceMatch())lastMatchPhase=null;
+  // Once a day, idle on the welcome screen: reload so a refreshed schedule.js and app build are picked up.
+  if(screen==='welcome'&&!adminAuthenticated&&!demo&&!celebration&&!$('#dialog').open&&Date.now()-lastActivity>RELOAD_IDLE&&Date.now()-LOADED_AT>RELOAD_AFTER){location.reload();return}
   pollLive();refreshBoard();refreshParticipants();updateKeyboardDock();
   const m=current(),phase=closed(m)?'closed':open(m)?'open':'waiting';
   if($('#countdown'))$('#countdown').textContent=countdownText(m);

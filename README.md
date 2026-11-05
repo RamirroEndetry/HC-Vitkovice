@@ -64,7 +64,7 @@ Klubový obsah je v `dist/club-content.js`: stažená soupiska s profily a fotog
 
 ## GitHub Pages
 
-Workflow `.github/workflows/pages.yml` při každém pushi do `main` a každé ráno (cron 3:15 UTC) publikuje složku `dist` (a do `index.html` vepíše verzi commitu místo `__V__`, aby kiosky nedržely staré skripty a styly v cache) na https://ramirroendetry.github.io/HC-Vitkovice/. Před publikováním obnoví rozpis domácích zápasů z hc-vitkovice.cz; když klubový web neodpoví, publikuje se rozpis uložený v repozitáři. Jde o statický web; živé skóre si kiosek stahuje přímo z hokej.cz, takže na Pages funguje celé. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
+Workflow `.github/workflows/pages.yml` při každém pushi do `main` a každé ráno (cron 3:15 UTC) publikuje složku `dist` (a do `index.html` vepíše verzi commitu a číslo běhu místo `__V__`, aby kiosky nedržely staré skripty, styly ani rozpis v cache) na https://ramirroendetry.github.io/HC-Vitkovice/. Před publikováním obnoví rozpis domácích zápasů z hc-vitkovice.cz; když klubový web neodpoví, publikuje se rozpis uložený v repozitáři. Jde o statický web; živé skóre si kiosek stahuje přímo z hokej.cz, takže na Pages funguje celé. Funguje se Settings → Pages → Source: GitHub Actions i s „Deploy from a branch“ (main, kořen): v tom případě kořenový `index.html` přesměruje na `dist/`.
 
 ## Cloudflare
 
@@ -132,9 +132,12 @@ Na telefonech se spořič nespouští (není to kiosek a mobilní prohlížeče 
 Kiosek stojí ve VIP zóně Mustang Arény, proto soutěž běží jen při domácích zápasech. `dist/schedule.js` je generovaný seznam domácích zápasů mužů od 20. 10. 2026 (první zápas soutěže) do konce základní části; ručně se neupravuje.
 
 - `npm run schedule:sync` stáhne rozpis z https://www.hc-vitkovice.cz/zapasy/MUZ, vezme jen zápasy označené jako domácí, soupeře spáruje s `dist/teams.js` a zapíše kolo, soupeře a termín (čas v Praze s platným posunem). Venkovní zápasy vynechá.
-- Id zápasu je `r<kolo>-<soupeř>`, takže přeložený termín nezmění id a tipy i výsledky v localStorage zůstanou u správného zápasu. Prvním třem zápasům zůstala původní id `lib`, `kom`, `tri`.
-- Skript nic nezapíše, když najde méně než 10 zápasů, neznámého soupeře, duplicitní id nebo chybí některý z původních zápasů; kiosek pak jede dál s posledním uloženým rozpisem.
+- Id zápasu je `r<kolo>-<soupeř>`; prvním třem zápasům zůstala původní id `lib`, `kom`, `tri`. Id musí zůstat stabilní, protože tipy, výsledky a ceny v localStorage jsou podle něj uložené: skript proto načte dosavadní `dist/schedule.js` a stejný zápas (stejný soupeř ve stejný den, jinak stejný soupeř ve stejném kole) dostane původní id i při přeloženém termínu nebo přečíslovaném kole.
+- Odehraný zápas, který klubový web už neuvádí, zůstane z dosavadního rozpisu zachovaný. Zápas bez času výkopu (odložený) si ponechá dosavadní termín; nečitelný řádek nebo neznámý soupeř se přeskočí s varováním, ostatní zápasy se aktualizují dál.
+- Skript nic nezapíše, když najde méně než 10 zápasů, duplicitní id nebo chybí některý z původních tří zápasů; kiosek pak jede dál s posledním uloženým rozpisem.
 - Publikování na GitHub Pages rozpis obnovuje při každém pushi a každé ráno; po změně na klubovém webu ho stáhněte i lokálně a commitněte, aby se repozitář neodchýlil.
+- Kiosek na úvodní obrazovce po 20 hodinách od načtení a 10 minutách nečinnosti stránku sám znovu načte, aby převzal obnovený rozpis (`RELOAD_AFTER`, `RELOAD_IDLE` v `dist/app.js`). Když se `schedule.js` nenačte, kiosek místo prázdné obrazovky ukáže výzvu k obnovení stránky.
+- Záloha do CSV i obnova ze zálohy zachovají tipy a výsledky i u zápasu, který už v rozpisu není (v CSV jako „Zápas mimo rozpis“).
 - Kiosek sám přepne na nejbližší další domácí zápas ráno po zápase s výsledkem (viz Obsluha a vyhodnocení).
 - Kiosek nejdříve používá místní kopii, při selhání zkusí známou vzdálenou adresu a pak zobrazí zkratku klubu. Běžné zobrazování proto nevyžaduje opakované stahování od klubového webu.
 

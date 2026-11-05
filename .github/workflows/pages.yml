@@ -31,7 +31,7 @@ jobs:
       - name: Refresh the home-match schedule from hc-vitkovice.cz
         run: node scripts/sync-schedule.cjs || echo "::warning::Schedule sync failed; publishing the committed dist/schedule.js"
       - name: Stamp asset version for cache busting
-        run: sed -i "s/__V__/${GITHUB_SHA::8}/g" dist/index.html
+        run: sed -i "s/__V__/${GITHUB_SHA::8}-${GITHUB_RUN_NUMBER}/g" dist/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
