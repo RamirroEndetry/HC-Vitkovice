@@ -9,7 +9,7 @@ Webový prototyp pro sdílenou obrazovku ve VIP zóně. Repozitář: https://git
 3. Po potvrzení poděkování; za 12 sekund čistý úvod pro dalšího návštěvníka. Po 90 sekundách nečinnosti se rozpracovaný formulář vymaže.
 4. Vstup „Průběžné pořadí a vítězové“ zobrazí tabulku všech tipů v aktuálním zápase: jméno, tipované skóre, odchylku a sdílené pořadí. Při dostupném aktuálním skóre zvýrazní průběžné lídry, po potvrzení výsledku konečné výherce 1., 2. a 3. místa (podle počtu cen) a vyzvednutí cen ve VIP zóně.
 
-Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Tipování se automaticky OTEVŘE 30 minut před plánovaným začátkem zápasu a automaticky se ZAMKNE 10 minut po něm; potom kiosek žádný tip nepřijme (férovost — nikdo netipuje s výhodou rozehraného zápasu). Obsluha nic nepotvrzuje.
+Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Tipování se automaticky OTEVŘE hodinu před plánovaným začátkem zápasu a automaticky se ZAMKNE 10 minut po něm; potom kiosek žádný tip nepřijme (férovost — nikdo netipuje s výhodou rozehraného zápasu). Obsluha nic nepotvrzuje.
 
 ## Ceny a přehled soutěžících
 
@@ -27,7 +27,7 @@ Vyhrává nejmenší součet absolutních odchylek od skóre **po 60 minutách**
 
 V administraci jsou pro aktuálně vybraný zápas dva bloky:
 
-- **Ruční otevření tipování** – tlačítko **Otevřít tipování ručně** zpřístupní tipování ještě před běžným oknem (30 minut před začátkem), např. pro ostrou zkoušku na kiosku. Tipy se ukládají do soutěže jako skutečné a návštěvníci vidí „TIPOVÁNÍ OTEVŘENO OBSLUHOU“. Zamčení 10 minut po začátku zápasu platí vždy. **Zrušit ruční otevření** vrací běžné časové okno. Ukládá se do `state.manualOpen[matchId]`.
+- **Ruční otevření tipování** – tlačítko **Otevřít tipování ručně** zpřístupní tipování ještě před běžným oknem (hodinu před začátkem), např. pro ostrou zkoušku na kiosku. Tipy se ukládají do soutěže jako skutečné a návštěvníci vidí „TIPOVÁNÍ OTEVŘENO OBSLUHOU“. Zamčení 10 minut po začátku zápasu platí vždy. **Zrušit ruční otevření** vrací běžné časové okno. Ukládá se do `state.manualOpen[matchId]`.
 - **Tipy tohoto zápasu** – seznam všech tipů (jméno, tip, čas) s tlačítkem **Smazat** u každého a **Smazat všechny tipy tohoto zápasu**. Každé smazání se potvrzuje; vrátit jde jen obnovou ze zálohy. Tipy ostatních zápasů zůstávají. Po výsledku smazání změní pořadí i vítěze (administrace na to upozorní).
 
 Pro zkoušení bez zápisu do soutěže dál slouží **Spustit zkušební tipování** (tipy se neukládají).

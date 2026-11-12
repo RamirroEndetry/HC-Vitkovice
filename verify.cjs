@@ -81,10 +81,10 @@ assert.doesNotMatch(el('#main').innerHTML,/id="entry-form"/);
 vm.runInContext('submitEntry()',context);
 assert.equal(JSON.parse(storage.values().next().value).entries.length,0);
 assert.match(el('#toast').textContent,/otevře/);
-// Countdown at the last second, then automatic opening (30 minutes before the start) without reloading.
-now='2026-10-20T16:59:59+02:00';vm.runInContext('form(); lastActivity=Date.now()',context);context.tick();
+// Countdown at the last second, then automatic opening (1 hour before the start) without reloading.
+now='2026-10-20T16:29:59+02:00';vm.runInContext('form(); lastActivity=Date.now()',context);context.tick();
 assert.match(el('#countdown').textContent,/01 s$/);
-now='2026-10-20T17:00:00+02:00';context.tick();
+now='2026-10-20T16:30:00+02:00';context.tick();
 assert.match(el('#main').innerHTML,/id="entry-form"/);
 assert.match(el('#main').innerHTML,/TIPOVÁNÍ OTEVŘENO/);
 vm.runInContext('outcome="1"',context);
@@ -139,4 +139,4 @@ const generalPartner=ClubContent.partners.find(p=>p.category==='Generální part
 const partnerIndex=vm.runInContext('partnerPage',context);el('#partners-pause').onclick();assert.equal(vm.runInContext('partnerPaused',context),true);vm.runInContext('partnerLastChange=Date.now()-9000;tickPartners()',context);assert.equal(vm.runInContext('partnerPage',context),partnerIndex);el('#partners-pause').onclick();assert.equal(vm.runInContext('partnerPaused',context),false);
 assert.equal(vm.runInContext('partnerGroups().flat().length',context),ClubContent.partners.length-ClubContent.partners.filter(p=>p.category==='Generální partner').length);
 
-console.log('PASS: exact/nearest winners, ties, validation, single-match visitor screens, countdown, automatic opening 30 min before start, submissions until the 10th minute, automatic lock, late-tip rejection, earlier-tip tie-break, result gating, pinned match on reload, persistence failure. Password gating, isolated admin practice tips, logout/reload/idle lock verified. Club profiles/assets, partner rotation/pause and five-minute/touch-dismiss trophy verified. Visual browser QA not performed.');
+console.log('PASS: exact/nearest winners, ties, validation, single-match visitor screens, countdown, automatic opening 1 hour before start, submissions until the 10th minute, automatic lock, late-tip rejection, earlier-tip tie-break, result gating, pinned match on reload, persistence failure. Password gating, isolated admin practice tips, logout/reload/idle lock verified. Club profiles/assets, partner rotation/pause and five-minute/touch-dismiss trophy verified. Visual browser QA not performed.');
