@@ -39,7 +39,7 @@ const storage=new Map();let failStorage=false;
 const context={console,Competition,LiveMatch,HockeyTeams,ClubContent,AbortController,fetch:async()=>({ok:false,status:503}),Date:TestDate,Intl,crypto:{randomUUID:()=>String(Math.random())},localStorage:{getItem:k=>storage.get(k)||null,setItem(k,v){if(failStorage)throw Error('full');storage.set(k,v)}},document:{querySelector:el,querySelectorAll:()=>[],addEventListener(){}},location:{hash:'',pathname:'/',search:''},history:{replaceState(){}},setTimeout(){},setInterval(fn){context.tick=fn},clearTimeout(){},addEventListener(){}};
 vm.createContext(context);vm.runInContext(fs.readFileSync('dist/schedule.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/data.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/club-ui.js','utf8'),context);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),context);
 assert.match(el('#main').innerHTML,/Dotkni se obrazovky/);
-assert.match(el('#main').innerHTML,/Zatím nikdo nehrál/);assert.match(el('#main').innerHTML,/CO MŮŽEŠ VYHRÁT/);assert.match(el('#main').innerHTML,/Podepsaný dres/);
+assert.match(el('#main').innerHTML,/Zatím nikdo nehrál/);assert.match(el('#main').innerHTML,/CO MŮŽEŠ VYHRÁT/);assert.match(el('#main').innerHTML,/Poukaz do restaurace Imrvére/);assert.match(el('#main').innerHTML,/u hostesek nebo na baru/);
 assert.match(el('#main').innerHTML,/countdown/);assert.match(el('#main').innerHTML,/assets\/teams\/lib.png/);assert.match(el('#main').innerHTML,/assets\/teams\/vit.png/);
 assert.doesNotMatch(el('#main').innerHTML,/id="match"/);
 assert.equal(JSON.parse(storage.values().next().value).activeMatchId,'lib');
@@ -57,9 +57,9 @@ vm.runInContext('demo.playing=false; demoScreen()',context);assert.match(el('#ma
 vm.runInContext('advanceDemo()',context);assert.equal(vm.runInContext('demo.index',context),1);
 const leaderAtDraw=vm.runInContext('Competition.evaluate(demo.tips,{home:1,away:1})[0].name',context);
 const leaderAtHomeLead=vm.runInContext('Competition.evaluate(demo.tips,{home:2,away:1})[0].name',context);assert.notEqual(leaderAtDraw,leaderAtHomeLead);
-vm.runInContext('while(demo.index<demo.steps.length-1)advanceDemo()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězi/);assert.match(el('#main').innerHTML,/Ceny si vyzvedněte ve VIP zóně/);
+vm.runInContext('while(demo.index<demo.steps.length-1)advanceDemo()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězi/);assert.match(el('#main').innerHTML,/Ceny si výherci mohou po zápase vyzvednout u hostesek nebo na baru/);
 // Three default prizes: the demo's 3 tips take 1st, 2nd and 3rd place, each with its own prize.
-assert.match(el('#main').innerHTML,/1\. místo · Tip 3 : 2[\s\S]*Podepsaný dres[\s\S]*place-2">2\.[\s\S]*Tip 2 : 1[\s\S]*Dvě vstupenky[\s\S]*place-3">3\.[\s\S]*Tip 1 : 1[\s\S]*Klubový balíček/);assert.equal(storage.values().next().value,earlySnapshot);
+assert.match(el('#main').innerHTML,/1\. místo · Tip 3 : 2[\s\S]*Poukaz do restaurace Imrvére[\s\S]*place-2">2\.[\s\S]*Tip 2 : 1[\s\S]*Vinařství Tesařík[\s\S]*place-3">3\.[\s\S]*Tip 1 : 1[\s\S]*Balíček od Lyofio/);assert.equal(storage.values().next().value,earlySnapshot);
 assert.equal(vm.runInContext('screen',context),'celebration');
 const awardDeadline=vm.runInContext('celebration.expiresAt',context);
 now=new Date(awardDeadline-1).toISOString();context.tick();assert.equal(vm.runInContext('screen',context),'celebration');
@@ -101,7 +101,7 @@ const titleField={type:'text',value:'',isConnected:true,disabled:false,focus(){}
 for(const k of ['shift','ř','í','z','e','k',' ','2'])vm.runInContext(`pressKey(${JSON.stringify(k)})`,context);assert.equal(titleField.value,'Řízek 2');
 const numberField={...titleField,type:'number',value:''};context.keyboardTargetStub=numberField;vm.runInContext('keyboardTarget=keyboardTargetStub',context);for(const k of ['a','3','ě','1','backspace'])vm.runInContext(`pressKey(${JSON.stringify(k)})`,context);assert.equal(numberField.value,'3');
 vm.runInContext('keyboardDock=false;keyboardTarget=null',context);
-vm.runInContext('welcome()',context);assert.match(el('#main').innerHTML,/Zlatý puk/);assert.doesNotMatch(el('#main').innerHTML,/Podepsaný dres/);vm.runInContext('adminAuthenticated=false;form();outcome="1"',context);
+vm.runInContext('welcome()',context);assert.match(el('#main').innerHTML,/Zlatý puk/);assert.doesNotMatch(el('#main').innerHTML,/Poukaz do restaurace Imrvére/);vm.runInContext('adminAuthenticated=false;form();outcome="1"',context);
 // A different visitor can still submit in the 10th minute; a score cannot be confirmed yet.
 now='2026-10-20T17:39:00+02:00';el('#guest-name').value='Jiný člověk';vm.runInContext('submitEntry()',context);assert.equal(JSON.parse(storage.values().next().value).entries.length,2);
 el('#result-home').value='2';el('#result-away').value='1';el('#result-confirm').checked=true;vm.runInContext('submitResult()',context);assert.equal(JSON.parse(storage.values().next().value).results.lib,undefined);
@@ -110,7 +110,7 @@ const clickAction=action=>el('#main').click({target:{closest:selector=>selector=
 now='2026-10-20T17:40:00+02:00';context.tick();assert.match(el('#main').innerHTML,/TIPY UZAVŘENY|uzamčen/);
 vm.runInContext('adminLogin()',context);el('#admin-password').value='Digi2026';vm.runInContext('unlockAdmin()',context);assert.match(el('#main').innerHTML,/id="match"/);assert.doesNotMatch(el('#main').innerHTML,/close-tipping/);
 vm.runInContext('form();outcome="1"',context);el('#guest-name').value='Pozdní návštěvník';vm.runInContext('submitEntry()',context);assert.equal(JSON.parse(storage.values().next().value).entries.length,2);
-vm.runInContext('submitResult()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězi!/);assert.match(el('#main').innerHTML,/&lt;b&gt;Eva&lt;\/b&gt;/);assert.doesNotMatch(el('#main').innerHTML,/Jiný člověk/);assert.match(el('#main').innerHTML,/Cenu si vyzvedněte ve VIP zóně/);
+vm.runInContext('submitResult()',context);assert.match(el('#main').innerHTML,/Gratulujeme vítězi!/);assert.match(el('#main').innerHTML,/&lt;b&gt;Eva&lt;\/b&gt;/);assert.doesNotMatch(el('#main').innerHTML,/Jiný člověk/);assert.match(el('#main').innerHTML,/Cenu si výherce může po zápase vyzvednout u hostesek nebo na baru/);
 assert.doesNotMatch(el('#main').innerHTML,/id="match"/);
 // Active game remains pinned when loading later; it never jumps to the next fixture.
 const reloaded={...context,setInterval(){},document:{...context.document,querySelector:()=>({innerHTML:'',addEventListener(){}})}};vm.createContext(reloaded);vm.runInContext(fs.readFileSync('dist/schedule.js','utf8'),reloaded);vm.runInContext(fs.readFileSync('dist/data.js','utf8'),reloaded);vm.runInContext(fs.readFileSync('dist/club-ui.js','utf8'),reloaded);vm.runInContext(fs.readFileSync('dist/app.js','utf8'),reloaded);assert.equal(vm.runInContext('currentId',reloaded),'lib');assert.equal(vm.runInContext('open(current())',reloaded),false);assert.equal(vm.runInContext('adminAuthenticated',reloaded),false);

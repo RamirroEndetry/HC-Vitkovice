@@ -13,7 +13,7 @@ Veškeré tipy jsou za základní hrací dobu, bez prodloužení a nájezdů. Ti
 
 ## Ceny a přehled soutěžících
 
-Úvodní obrazovka má pod kartou zápasu dva panely (na širokém displeji po stranách): vlevo „Co můžeš vyhrát – Ceny pro tento zápas“ se seznamem cen pro aktivní zápas, vpravo „Kdo už tipuje“ s posledními čtyřmi tipy a počtem všech. Bez tipů ukazuje výzvu „Zatím nikdo nehrál. Buď první a tipuj!“. Ceny jsou uložené pro každý zápas zvlášť (`state.prizes[matchId]`), obsluha je upravuje v administraci v bloku „Ceny pro tento zápas“ (až šest položek, název + poznámka); dokud je neuloží, platí výchozí trojice. **Počet cen určuje počet vyhlašovaných míst:** cena č. 1 patří 1. místu, cena č. 2 druhému atd. (`Competition.podium(entries, result, places)`). Při výchozích třech cenách se tedy vyhlašuje 1., 2. a 3. místo; s jedinou cenou jen vítěz.
+Úvodní obrazovka má pod kartou zápasu dva panely (na širokém displeji po stranách): vlevo „Co můžeš vyhrát – Ceny pro tento zápas“ se seznamem cen pro aktivní zápas, vpravo „Kdo už tipuje“ s posledními čtyřmi tipy a počtem všech. Bez tipů ukazuje výzvu „Zatím nikdo nehrál. Buď první a tipuj!“. Ceny jsou uložené pro každý zápas zvlášť (`state.prizes[matchId]`), obsluha je upravuje v administraci v bloku „Ceny pro tento zápas“ (až šest položek, název + poznámka); dokud je neuloží, platí výchozí trojice: 1. poukaz do restaurace Imrvére, 2. víno z Vinařství Tesařík + šála HCV, 3. balíček od Lyofio (`DEFAULT_PRIZES` v `dist/app.js`). Text o vyzvednutí cen u hostesek nebo na baru je v `pickupNote()`. **Počet cen určuje počet vyhlašovaných míst:** cena č. 1 patří 1. místu, cena č. 2 druhému atd. (`Competition.podium(entries, result, places)`). Při výchozích třech cenách se tedy vyhlašuje 1., 2. a 3. místo; s jedinou cenou jen vítěz.
 
 ## Obsluha a vyhodnocení
 
@@ -153,7 +153,7 @@ Spodní partnerský pás je viditelný na všech běžných obrazovkách. Gener�
 
 ## Vyhlášení s pohárem
 
-Po potvrzení konečného výsledku aplikace spočítá výherce a automaticky zobrazí pohár, gratulaci, velké jméno vítěze s cenou za 1. místo, pod ním 2. a 3. místo (podle počtu cen zápasu) s tipem, odchylkou a cenou a pokyn k vyzvednutí cen ve VIP zóně. Tabulka pořadí u nich ukáže „N. místo · cena“, u ostatních „Bez ceny“; během zápasu jsou výherní pozice označené jako „Průběžně N. místo“. Bez přesného tipu se vyhlásí nejbližší podle stejných pravidel jako v tabulce. Při shodě zůstávají všichni společnými vítězi. Bez platných tipů se pohár nezobrazuje.
+Po potvrzení konečného výsledku aplikace spočítá výherce a automaticky zobrazí pohár, gratulaci, velké jméno vítěze s cenou za 1. místo, pod ním 2. a 3. místo (podle počtu cen zápasu) s tipem, odchylkou a cenou a pokyn k vyzvednutí cen po zápase u hostesek nebo na baru. Tabulka pořadí u nich ukáže „N. místo · cena“, u ostatních „Bez ceny“; během zápasu jsou výherní pozice označené jako „Průběžně N. místo“. Bez přesného tipu se vyhlásí nejbližší podle stejných pravidel jako v tabulce. Při shodě zůstávají všichni společnými vítězi. Bez platných tipů se pohár nezobrazuje.
 
 Vyhlášení má vlastní časovač přesně 300 sekund. Běžný návrat po 90 sekundách jej nepřeruší. Celou obrazovku lze zavřít dotykem/kliknutím, klávesou Escape nebo po uplynutí pěti minut; potom se zobrazí výsledková tabulka. Na výsledkové obrazovce lze pohár znovu otevřít tlačítkem **Zobrazit pohár**. Stejná obrazovka se spustí na konci demoverze a je označená jako demo. Průběžný lídr pohár nespouští. Interaktivní prvky pod vyhlášením jsou po dobu zobrazení nedostupné.
 
